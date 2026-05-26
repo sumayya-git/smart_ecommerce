@@ -66,7 +66,7 @@ from django.utils.decorators import method_decorator
 
 from.utils import success_response, error_response
 
-from django_ratelimit.decorators import ratelimit
+from django_ratelimit.decorators import ratelimit # fixed
 
 from django.utils.decorators import method_decorator
 
