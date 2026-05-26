@@ -1,0 +1,289 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<script>
+   const ORDER_ID_FROM_DJANGO = "{{ order.id }}";
+
+</script>
+
+   <style>
+     .timeline {
+        list-style:none;
+        display: flex;
+        gap: 20px;
+        padding: 0;
+     }
+
+     .timeline li {
+        padding: 10px 15px;
+        border-radius: 20px;
+        background: #ddd;
+        font-weight: bold;
+     }
+
+     .timeline li.done {
+
+        background: #4caf50;
+        color: white;
+     }
+
+     .timeline li.active{
+       
+        background: #2196f3;
+        color: white;
+     }
+
+
+   </style>
+
+<h2>📦Order Tracking</h2>
+
+{% if messages %}
+   {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} mt-3">
+      {{ message }}
+    </div>
+  
+     {% endfor %}
+   {% endif %}
+      
+
+
+<h3>Order #{{ order.id }}</h3>
+
+{% if order.status == "CANCELLED" %}
+  {% if order.refund_status == "COMPLETED" %}
+    <span class="badge bg-success mb-2">
+      ✅ Refund Completed
+    </span>
+   <p class="text-success mt-2">
+       Order cancelled. Refund has been completed successfully.
+   </p>
+
+   {% elif order.refund_status == "INITIATED" %}
+     <span class="badge bg-warning text-dark mb-2">
+      ⌛ Refund initiated
+     </span>
+      <p class="text-warning mt-2">
+        Order cancelled by user. Refund is being processed (3-5 working days).
+     </p>
+   {% else %}
+     <span class="badge bg-danger mb-2">
+       ❌ Refund Not Initiated
+     </span>
+     <p class="text-danger mt-2">
+       Order cancelled by user. Refund will be Initiated soon.
+     </p>
+ {% endif %}
+
+{% endif %}
+
+{% if order.status in "PLACED PACKED" %}
+<form method="post" action="{% url 'cancel_order' order.id %}" style="margin-top:10px;">
+   {% csrf_token %}
+   <button class="btn btn-danger">Cancel Order</button>
+</form>
+{% endif %}
+
+
+
+
+
+{% if order.status == "CANCEL_REQUESTED" %}
+<ul class="timeline">
+   <li class="disabled">PLACED</li>
+   <li class="disabled">PACKED</li>
+   <li class="active">CANCEL REQUESTED</li>
+   <li class="disabled">DELIVERED</li>
+</ul>
+
+{% elif order.status not in "CANCELLED CANCEL_REQUESTED" %}
+<ul class="timeline">
+  {% for s in status_flow %}
+   <li 
+     {% if forloop.counter0 == current_index %}
+      class="active"
+     {% elif forloop.counter0 < current_index %}
+       class="done"
+     {% endif %}
+   >
+      {{ s }}
+    </li>
+  {% endfor %}
+
+</ul>
+{% endif %}
+
+<p><b>Placed:</b> {{ order.placed_at }}</p>
+
+{% if order.packed_at %}
+<p><b>Packed:</b> {{ order.packed_at }}</p>
+{% endif %}
+
+{% if order.shipped_at %}
+<p><b>Shipped:</b> {{ order.shipped_at }}</p>
+{% endif %}
+
+{% if order.delivered_at %}
+<p><b>Delivered:</b> {{ order.delivered_at }}</p>
+{% endif %}
+
+<p><b>Order ID:</b> {{ order.id }}</p>
+<p><b>Total:</b> {{ order.total_amount }}</p>
+
+<a href="{% url 'invoice_pdf' order.id %}" class="btn btn-primary" target="_blank">Download Invoice (PDF)</a>
+
+<hr>
+<h3>Ordered Items</h3>
+
+<table border="1" cellpadding="0">
+   <tr>
+      <th align="left">Product</th>
+      <th align="right">Price</th>
+      <th align="center">Qty</th>
+      <th align="right">Subtotal</th>
+   </tr>
+
+{% for item in order.items.all %}
+<tr>
+   <td>{{ item.product.name }}</td>
+   <td align="right">${{ item.price|floatformat:2}}</td>
+   <td align="center">{{ item.effective_qty }}</td>
+   <td align="right">${{ item.subtotal }}</td>
+
+   <td align="center">
+      {% if order.status == "PLACED" and order.payment_status != "PAID" %}
+         {% if item.effective_qty > 1 %}
+           <a href="{% url 'reduce_order_item' item.id %}" class="btn btn-warning btn-sm">-
+
+            </a>
+         {% endif %}
+
+         {% if item.effective_qty < item.product.stock %}
+            
+           <a href="{% url 'increase_order_item' item.id %}" class="btn btn-success btn-sm ms-1">+
+         
+         {% endif %}
+            
+        
+
+      {% endif %}
+   </td>
+   
+   
+   
+</tr>
+{% endfor %}
+</table>
+
+{% if order.payment_status == "PAID" %}
+   <span class="badge bg-success mt-3">PAID</span>
+
+{% else %}
+   {% if order.status != "CANCELLED" %}
+   <button id="pay-btn" class="btn btn-success mt-3">Pay Now</button> 
+   {% endif %}
+{% endif %}
+
+{% endblock %} 
+
+
+{% block extra_js %}
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+   function getCookie(name) {
+      let cookieValue = null;
+      if(document.cookie && document.cookie !== '') {
+         const cookies = document.cookie.split(';');
+         for(let i=0; i<cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if(cookie.substring(0,name.length + 1) === (name + '=')) {
+               cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+               break;
+            }
+         }
+      }
+      return cookieValue;
+
+   }
+   const csrftoken = getCookie('csrftoken');
+</script>
+<script>
+ document.addEventListener("DOMContentLoaded", function() {
+
+   const payBtn = document.getElementById("pay-btn");
+
+   if(!payBtn) {
+      console.log("Pay button not found");
+      return;
+   }
+   
+
+   payBtn.onclick = function () {
+      console.log("Pay button clicked");
+
+      fetch("http://127.0.0.1:8000/api/payment/create-order/",{
+         method: "POST",
+         headers: {
+            "Content-Type":"application/json",
+            "X-CSRFToken": csrftoken
+         },
+         body: JSON.stringify({
+            order_id:"{{ order.id }}"
+         })
+      })
+
+      .then(res => res.json())
+      .then(data => {
+
+         const options = {
+          key:"{{ RAZORPAY_KEY_ID }}",
+          amount:data.amount,
+          currency:"INR",
+          name:"SmartShop",
+          description:"Order Payment",
+          order_id:data.order_id,
+
+          handler:function(response) {
+            console.log("FULL RESPONSE",response);
+            fetch("/api/payment/verify/", {
+               method: "POST",
+               headers: {
+                  "Content-Type": "application/json",
+                  "X-CSRFToken": csrftoken
+               },
+               body: JSON.stringify({
+                  order_id: "{{ order.id }}",
+                  razorpay_payment_id: response.razorpay_payment_id,
+                  razorpay_order_id: response.razorpay_order_id,
+                  razorpay_signature: response.razorpay_signature
+               })
+            })
+          
+            .then(res => res.json())
+            .then(data => {
+               alert("Order marked as PAID");
+               window.location.reload();
+            });
+          },
+
+          theme:{
+           color: "#3399cc"
+          }
+        };
+
+        const rzp = new Razorpay(options);
+            rzp.open();
+
+});
+ 
+   };
+      
+});
+</script>
+    
+{% endblock %} 
+

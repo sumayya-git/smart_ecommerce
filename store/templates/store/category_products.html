@@ -1,0 +1,36 @@
+{% extends 'store/base.html' %}
+{% block content %}
+
+<h2 style="color:red;">Category:
+ {{ category.name }}</h2>
+<hr>
+
+{% if products %}
+    <div style="display:flex; gap:20px; flex-wrap:wrap;">
+       
+      {% for product in products %}
+        <div style="border:1px solid #ccc; padding:15px; width:220px;"> 
+             <a href="{% url 'product_detail' product.id %}" style="text-decoration:none; color:black;"></a>
+
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" width="180">
+                {% endif %}
+
+                <h4>{{ product.name }}</h4>
+             </a>
+             <p>${{ product.price }}</p>
+
+             <a href="{% url 'add_to_cart' product.id %}">
+
+                  <button>Add to Cart</button>
+            </a>
+
+        </div>
+    
+       {% endfor %}
+    </div>
+{% else %}
+     <p>No product in this category</p>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport"
+    content="width=device-width,
+    initial-scale=1.0">
+    <title>Invoice Verification</title>
+
+<style>
+
+body{
+font-family: Arial;
+background: #f4f6f9;
+display: flex;
+justify-content: center;
+align-items: center;
+min-height: 100vh;
+margin: 0;
+}
+
+.card{
+
+background: white;
+width: 90%;
+max-width:400px;
+padding: 25px;
+border-radius: 10px;
+box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+
+}
+
+.header{
+text-align: center;
+margin-bottom: 10px;
+}
+
+.company{
+font-size: 20px;
+font-weight: bold;
+}
+
+.logo{
+width:80px;
+height:auto;
+display:block;
+margin:0 auto 10px auto;
+}
+
+.header{
+border-bottom: 1px solid #eee;
+padding-bottom: 10px;
+}
+
+.verified{
+display:inline-flex;
+align-items: center;
+gap:8px;
+background:#e6f9ec;
+color:#1e8e3e;
+padding:8px 14px;
+border-radius:20px;
+font-size: 16px;
+font-weight: bold;
+margin-top: 10px;
+}
+
+.success-circle{
+width: 70px;
+height: 70;
+border-radius: 50%;
+background: #28a745;
+display: flex;
+align-items: center;
+justify-content: center;
+color: white;
+font-size: 30px;
+margin: 0 auto 10px auto;
+animation: pop 0.5s ease;
+}
+
+
+.check-icon{
+font-size:18px;
+animation:pop 0.4s ease;
+}
+
+@keyframes pop{
+0%{transform:scale(0.6);}
+100%{transform:scale(1);}
+}
+
+
+.section p{
+margin:4px 0;
+}
+
+.table{
+width:100%;
+border-collapse: collapse;
+margin-top: 10px;
+font-size:14px;
+}
+
+.table th{
+background:#2c3e50;
+color:white;
+padding:8px;
+text-align:left;
+}
+
+.table td{
+padding:8px;
+border-bottom: 1px solid #eee;
+text-align:left;
+}
+
+.table td:last-child{
+text-align:right;
+}
+
+.total{
+text-align: right;
+margin-top: 10px;
+font-weight: bold;
+font-size: 18px;
+color:#000;
+}
+
+.footer{
+margin-top: 20px;
+text-align: center;
+color: green;
+}
+
+</style>
+</head>
+<body>
+<div class="card">
+<div class="header">
+<div class="success-circle">✅</div>
+<img src="http://cdn-icons-png.flaticon.com/512/263/263142.png" class="logo">
+<div class="company">
+Smart Commerce Pvt Ltd
+</div>
+<div class="verified">
+<span class="check-icon">✅</span> 
+Invoice Verified
+</div>
+
+</div>
+
+<div class="section">
+<p><b>Invoice No:</b> INV-{{order.id}}</p>
+<p><b>Order Id:</b> {{order.id}}</p>
+<p><b>Customer:</b>{{order.user.username}}</p>
+<p><b>Order Date:</b>{{order.created_at}}</p>
+
+<p><b>Payment Status:</b>{{order.payment_status}}</p>
+</div>
+<table class="table">
+<tr>
+<th>Product</th>
+<th>Qty</th>
+<th>Price</th>
+</tr>
+{% for item in order.items.all %}
+<tr>
+<td>{{item.product.name}}</td>
+<td>{{item.quantity}}</td>
+<td>${{item.product.price}}</td>
+</tr>
+{% endfor %}
+</table>
+
+<div class ="total">
+
+Total: ${{order.total_amount}}
+
+</div>
+
+<div class="footer">
+This invoice is authentic
+</div>
+</body>
+</html>

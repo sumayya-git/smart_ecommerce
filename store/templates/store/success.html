@@ -1,0 +1,15 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+ <h2>💐Order Placed Successfully</h2>
+
+    
+
+<p>Your Order ID:</b>{{ order.id }}</b></p>
+    
+<a href="{% url 'home' %}" class="btn btn-primary">Continue Shopping</a>
+
+{% endblock %}
+        
+    

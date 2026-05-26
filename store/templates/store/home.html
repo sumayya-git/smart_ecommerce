@@ -1,0 +1,65 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+<h2>Categories</h2>
+
+<ul style="list-style:none; padding-left:0;">
+    <li style="margin-bottom:8px;"><a href="{% url 'home' %}" class="category-link {% if active_category == 'all' %}active{% endif %}">All</a></li>
+
+    {% for category in categories %}
+    <li style="margin-bottom:8px;">
+        <a href="{% url 'category_products' category.slug %}" class="category-link" {% if active_category == category.slug %}active{% endif %}">
+            
+            {% if category.image %}
+                <img src="{{ category.image.url }}" width="24">
+            {% endif %}
+
+            <span>{{ category.name }}</span>
+        </a>
+     </li>
+         
+   {% endfor %}
+</ul>
+
+<hr>
+<h2>Products</h2>
+
+{% if products %}
+<div style="display:flex; gap:20px; flex-wrap:wrap;">
+
+     {% for product in products %}
+        <div style="border:1px solid #ccc; padding:15px; width:220px;">
+
+            <a href="{% url 'product_detail' product.id %}" style="text-decoration:none; color:black;">
+    
+                {% if product.image %}
+                    <img src="{{ product.image.url }}" width="180">
+                {% endif %}
+
+                <h4>{{ product.name }}</h4>
+            
+                <p>${{ product.price }}</p>
+            </a>
+
+                <a href="/add-to-cart/{{ product.id }}/">
+
+                  <button>Add to Cart</button>
+
+                 </a>
+            </div>    
+     {% endfor %}
+     </div>
+     {% else %}
+
+       <p>No Products Available</p>
+          
+{% endif %}
+{% endblock %}
+ 
+         
+      
+ 
+    
+
+

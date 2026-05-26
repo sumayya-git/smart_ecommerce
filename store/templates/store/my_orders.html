@@ -1,0 +1,19 @@
+{% extends 'store/base.html' %}
+{% block content %}
+
+
+<h2>My Orders</h2>
+
+{% for order in orders %}
+ <p>
+    Order #{{ order.id }} |
+    ${{ order.total_amount }} |
+    {{ order.status }}
+    <a href="{% url 'track_order' order.id %}">Track</a>
+
+ </p>
+
+{% empty %}
+  <p>No orders yet</p>
+{% endfor %}
+{% endblock %}

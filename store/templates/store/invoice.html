@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <style>
+        body { font-family: Helvetica; font-size: 12px;}
+        h2 {margin-bottom: 10px; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top:10px;
+        }
+        th,td{
+            border: 1px solid #444;
+            padding: 6px;
+            text-align: left;
+        }
+        th {
+            background: #eee;
+        }
+        .right {text-align:right; }
+        .center { text-align:center;}
+
+        .refunded-watermark {
+            position:absolute;
+            top:300px;
+            left:120px;
+            font-size:90px;
+            color:#f2b3b3;
+            letter-spacing:10px;
+            z-index:999;
+            font-weight:bold;
+            opacity:0.25;
+        }
+
+    </style>
+    
+</head>
+<body style="position:relative;">
+
+  {% if order.status == "REFUNDED" or order.refund_status == "COMPLETED" %}
+    <div class="refunded-watermark">
+        REFUNDED
+    </div>
+  {% endif %}
+<table width="100%">
+    <tr>
+        <td>
+            <h2><strong>Smart E-Commerce</strong></h2>
+            <p><strong>Invoice</strong></p>
+        </td>
+        <td align="right">
+            <img src="{{ logo_path }}" width="80">
+        </td>
+    </tr>
+</table>
+<hr>
+
+<p>
+    <Strong>Invoice No:</Strong>
+    INV-{{ order.created_at|date:"Y" }}-{{ order.id|stringformat:"04d" }}
+</p>
+
+<p>
+    <strong>Sold By:</strong><br>
+    Smart E-Commerce Pvt Ltd<br>
+    12, Ana Salai<br>
+    Chennai - 600001<br>
+    Tamil Nadu, India
+</p>
+
+<hr>
+
+<p>
+    <strong>Order ID:</strong> {{ order.id }}
+    <br>
+    <strong>Date:</strong> {{ order.created_at }}
+    <br>
+
+    <strong>Status:</strong> 
+    {% if order.refund_status == "COMPLETED" %}
+      <span style="color:blue;font-weight:bold;">REFUNDED</span>
+    {% elif order.status == "CANCELLED" %}
+     <span style="color:red;font-weight:bold;">CANCELLED</span>
+    {% elif order.payment_status == "PAID" %}
+      <span style="color:green;font-weight:bold;">PAID</span>
+
+    {% else %}
+      {{ order.status }}
+      
+    {% endif %}
+
+</p>
+{% if order.refund_date %}
+<br>
+<strong>Refund Date:</strong>
+{{ order.refund_date|date:"d M Y, h:i A" }}
+{% endif %}
+
+<p>
+    <strong>Billing Address:</strong><br>
+    {% if order.address %}
+      {{ order.address }}<br>
+      {{ order.city }} - {{ order.pincode }}<br>
+      {{ order.state }}<br>
+    {% else %}
+      N/A
+    {% endif %}
+    <br>
+      <strong> Phone:</strong> {{ order.phone|default:"" }}
+</p>
+
+<p>
+    <Strong>Billed To:</Strong><br>
+    {{ order.user.username }}<br>
+    {{ order.user.email }}
+</p>
+
+<hr>
+
+
+
+<table>
+    <tr>
+        <th>Product</th>
+        <th class="right">Price</th>
+        <th class="center">Qty</th>
+        <th class="right">Subtotal</th>
+    </tr>
+
+    {% for item in items %}
+    <tr>
+        <td>{{ item.product.name }}</td>
+         <td class="center"> {{ item.quantity }}</td>
+        <td class="right"> Rs. {{ item.price }}</td>
+       
+        <td class="right">Rs. {{ item.price|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
+
+    <tr>
+        <td colspan="3" class="right">Subtotal</td>
+        <td class="right">Rs.
+            {{ subtotal }}</td>
+    </tr>
+
+    <tr>
+        <td colspan="3" class="right">CGST(9%)</td>
+        <td class="right">Rs.
+            {{ cgst }}</td>
+    </tr>
+
+     <tr>
+        <td colspan="3" class="right">SGST(9%)</td>
+        <td class="right">Rs.
+            {{ sgst }}</td>
+    </tr>
+
+     <tr class="total-row">
+        <td colspan="3" class="right"><strong>Grand Total</strong></td>
+        <td class="right"><strong>Rs.
+            {{ grand_total }}</strong></td>
+    </tr>
+</table>
+    
+</body>
+</html>

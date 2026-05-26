@@ -1,0 +1,84 @@
+{% extends 'store/base.html' %}
+
+{% block content %}
+
+
+
+
+
+<div class="container mt-4">
+
+<h2 class="mb-4">📦Order Tracking</h2>
+
+<h2 class="mb-3">Order #{{ order.id }}</h2>
+
+<p class="mb-3">
+    <strong>Status:</strong>
+    {% if order.status == "Placed" %}
+      <span class="badge bg-secondary">PLACED</span>
+    {% elif order.status == "Packed" %}
+      <span class="badge bg-warning text-dark">PACKED</span>
+    {% elif order.status == "Shipped" %}
+      <span class="badge bg-primary">SHIPPED</span>
+    {% elif order.status == "Delivered" %}
+      <span class="badge bg-success">DELIVERED</span>
+    {% endif %}
+    
+</p>
+<p>Placed: {{ order.placed_at }}</p>
+{% if order.packed_at %}
+  <p>Packed: {{ order.packed_at }}</p>
+{% endif %}
+{% if order.shipped_at %}
+  <p>Shipped: {{ order.shipped_at }}</p>
+{% endif %}
+
+{% if order.delivered_at %}
+  <p>Delivered: {{ order.delivered_at }}</p>
+{% endif %}
+
+<p class="fw-bold text-end"></p>Total: ${{ order.total_amount }}</p>
+
+<hr>
+
+<h4 class="mt-4 mb-3">Ordered Items</h4>
+
+{% if items %}
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Product</th>
+        <th class="text-end" >Price</th>
+        <th class="text-center">Qty</th>
+             
+        <th class="text-end">Subtotal</th>
+      </tr>
+    </thead>
+
+  <tbody>
+ {% for item in items %}
+ <tr>
+
+    <td>{{ item.product.name }}</td>
+    <td class="text-end">${{ item.price|floatformat:2 }}</b></td>
+    <td class="text-center">{{ item.quantity }}</td>
+    
+    <td class="text-end">${{ item.subtotal|floatformat:2 }}</b></td>
+    
+</tr>
+    
+ 
+ {% endfor %}
+</tbody>
+</table>
+{% else %}
+ <p>No items found for this order.</p>
+{% endif %}
+
+</div>
+<hr>
+
+
+
+{% endblock %}
+
