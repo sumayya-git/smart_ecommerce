@@ -262,8 +262,9 @@ RATELIMIT_VIEW = 'store.views.ratelimit_error'
 DEBUG = False
 
 ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost"
+    "smart-ecommerce-gwd.onrender.com",
+    "localhost",
+    "127.0.0.1"
 ]
 
 
