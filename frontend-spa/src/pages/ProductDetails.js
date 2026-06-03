@@ -17,12 +17,12 @@ function ProductDetails({refreshCart}){
 
     const [product, setProduct] = useState(null);
 
-    const [Loading, setLoading] =useState(true);
+    const [loading, setLoading] =useState(true);
 
     const [cartLoading, setCartLoading] = useState(false);
 
     useEffect(() => {
-        getProductDetails(id)
+        fetchProductDetails(id)
 
             
             .then((res) => { 
