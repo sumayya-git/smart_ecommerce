@@ -37,7 +37,7 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 CSRF_TRUSTED_ORIGINS = [
                          "http://localhost:3000",
-                         "https://smart-ecommerce-eqjd.onrender.com",
+                         "https://smart-ecommerce-gwjd.onrender.com",
                         ]
 
 
@@ -88,7 +88,7 @@ CORS_ALLOWED_ORIGINS = [
    
     
     "http://localhost:3000",
-    "https://smart-ecommerce-eqjd.onrender.com",
+    "https://smart-ecommerce-gwjd.onrender.com",
 
 
    
