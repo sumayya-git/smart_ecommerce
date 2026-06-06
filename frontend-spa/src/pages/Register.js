@@ -27,10 +27,15 @@ function Register() {
                 password
             }
         );
-        
+            console.log("REGISTER SUCCESS");
 
-        toast.success("User created");
-        navigate("/login");
+
+            toast.success("User created");
+
+            console.log("TOAST SUCCESS");
+            navigate("/login");
+
+            console.log("NAVIGATE SUCCESS")
 
     }catch (err){
         console.log(err);

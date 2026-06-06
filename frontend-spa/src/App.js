@@ -24,6 +24,21 @@ import CategoryProducts  from "./pages/CategoryProducts";
 import API from "./api";
 
 function App() {
+
+  console.log(Register);
+  console.log(Login);
+  console.log(AdminDashboard);
+  console.log(ToastContainer);
+  console.log(Navbar);
+  console.log(AdminRoute);
+  console.log(PrivateRoute);
+  console.log(EditProfile);
+  console.log(Checkout);
+  console.log(CategoryProducts);
+  console.log(ProductDetails);
+
+
+
   const [cartCount, setCartCount] = useState(0);
 
   useEffect(() => {
@@ -86,18 +101,18 @@ useEffect(() => {
         <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
         <Route path="/orders" element={<PrivateRoute><Orders /></PrivateRoute>} />
         <Route path="/login" element={<Login />} />
-         <Route path="/product/:id" element={<ProductDetails refreshCart={fetchCartCount} />} />
-         <Route path="/register" element={<Register />} />
-         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-         <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/product/:id" element={<ProductDetails refreshCart={fetchCartCount} />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
 
-         <Route path="/edit-profile" element={<EditProfile />} />
-         <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
-         <Route path="/category/:category" element={<CategoryProducts />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
+        <Route path="/category/:category" element={<CategoryProducts />} />
       </Routes>
-       <ToastContainer position="top-right" autoClose={3000} />
+         <ToastContainer position="top-right" autoClose={3000} />
 
-     </Router>
+    </Router>
     );
 }
    

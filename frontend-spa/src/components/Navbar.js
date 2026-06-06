@@ -13,6 +13,9 @@ import { fetchCart } from "../services/cartService";
 
 function Navbar({ cartCount, refreshCart }) {
 
+  console.log(FaBars);
+  console.log(FaChevronDown);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -131,6 +134,7 @@ function Navbar({ cartCount, refreshCart }) {
 
     
   return (
+    
     <>
     
       
