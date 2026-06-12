@@ -28,6 +28,8 @@ function getCSRFToken(){
 
 API.interceptors.request.use((config) => {
     const token = getCSRFToken();
+
+    console.log("CSRF TOKEN =", token)
      
      
      
