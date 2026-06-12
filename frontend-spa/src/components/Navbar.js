@@ -24,6 +24,7 @@ function Navbar({ cartCount, refreshCart }) {
   }, []);
 
   const [showDropdown, setShowDropdown] = useState(false);
+  
   const [search, setSearch] = useState("");
   
   const [showMenu, setShowMenu] = useState(false);
@@ -39,7 +40,8 @@ function Navbar({ cartCount, refreshCart }) {
       setUsername(res.data.username);
 
     })
-    .catch(() => {
+    .catch((err) => {
+      console.log("PROFILE ERROR",err);
       setUsername(null);
     });
   }, []);
@@ -134,6 +136,7 @@ function Navbar({ cartCount, refreshCart }) {
 
     
   return (
+    
     
     <>
     

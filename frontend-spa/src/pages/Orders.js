@@ -1,133 +1,153 @@
-import React,{ useEffect, useState } from "react";
-import OrderProgress from  "../components/OrderProgress";
+// import React,{ useEffect, useState } from "react";
+// // import OrderProgress from  "../components/OrderProgress";
 
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
-import { getMyOrders, cancelOrderService, requestReturnService, downloadInvoiceService } from "../services/orderService"
+// import { getMyOrders, cancelOrderService, requestReturnService, downloadInvoiceService } from "../services/orderService"
 
-import STATUS from "../constants/orderStatus"
+// import STATUS from "../constants/orderStatus"
 
-import OrderCard from "../components/OrderCard"
-
-
+// import OrderCard from "../components/OrderCard"
 
 
+//  console.log(OrderCard);
+// //  console.log(OrderProgress);
+//  console.log("STATUS =", STATUS);
+//  console.log(useNavigate)
 
+
+
+
+import React  from "react"
 function Orders() {
+  return (
+    <div>HELLO ORDERS</div>
+  );
+}
   
 
-    const [orders, setOrders] = useState([]);
+//     const [orders, setOrders] = useState([]);
 
-    const navigate = useNavigate();
+//      console.log("orders =", orders);
+//      console.log("OrderCard =", OrderCard);
+
+
+//     const navigate = useNavigate();
+
+   
    
 
-    const fetchOrders = async () => {
-     try{
+//     const fetchOrders = async () => {
+//      try{
       
     
         
     
            
-           const res = await getMyOrders()
+//            const res = await getMyOrders()
           
            
       
     
        
             
-            setOrders(res.data.data || [])
+//             setOrders(res.data.data || [])
             
 
             
          
-     }catch(err){
-      console.log(err);
+//      }catch(err){
+//       console.log(err);
 
-      if(err.response?.status === 401){
-         navigate("/login");
-     }
+//       if(err.response?.status === 401){
+//          navigate("/login");
+//      }
             
-    }
-    }
+//     }
+//     }
   
 
-     useEffect(() => {
-       fetchOrders();
-     }, []);
+//      useEffect(() => {
+//        fetchOrders();
+//      }, []);
     
-     const cancelOrder = async (orderId) => {
-      try{
+//      const cancelOrder = async (orderId) => {
+//       try{
        
 
-       await cancelOrderService(orderId)
+//        await cancelOrderService(orderId)
   
-        alert("Order cancelled");
-        fetchOrders();
+//         alert("Order cancelled");
+//         fetchOrders();
         
-    }catch(err){
-      console.log(err);
-    }
+//     }catch(err){
+//       console.log(err);
+//     }
        
    
         
-};
+// };
 
-const requestReturn = async (orderId) => {
-  try{
-    await requestReturnService(orderId)
+// const requestReturn = async (orderId) => {
+//   try{
+//     await requestReturnService(orderId)
       
 
-    alert("Return requested");
-   fetchOrders();
-  } catch (err) {
-    alert("Return failed");
-  }
+//     alert("Return requested");
+//    fetchOrders();
+//   } catch (err) {
+//     alert("Return failed");
+//   }
   
-}
+// }
 
-  const downloadInvoice = async (orderId) => {
+//   const downloadInvoice = async (orderId) => {
     
-    try{
+//     try{
     
 
-      const res = await downloadInvoiceService(orderId)
-      const url = window.URL.createObjectURL(new Blob([res.data]));
-      const link = document.createElement("a");
-      link.href = url
-      link.setAttribute("download", `invoice_${orderId}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
+//       const res = await downloadInvoiceService(orderId)
+//       const url = window.URL.createObjectURL(new Blob([res.data]));
+//       const link = document.createElement("a");
+//       link.href = url
+//       link.setAttribute("download", `invoice_${orderId}.pdf`);
+//       document.body.appendChild(link);
+//       link.click();
+//       link.remove();
 
-    } catch(err) {
+//     } catch(err) {
      
-      alert(" Download failed");
-    }
-  }
+//       alert(" Download failed");
+//     }
+//   }
     
     
-return(
-    <div style={{ padding: "20px" }}>
-       <h2>My Orders</h2>
+// return(
+
+  
+//     <div style={{ padding: "20px" }}>
+//        <h2>My Orders</h2>
        
     
-        {Array.isArray(orders) && orders.map((order) => (
+//         {Array.isArray(orders) && orders.map((order) => (
           
-    
+//           <div key={order.id}>
+//              Order ID: {order.id}
+//              </div>
     
         
-          <OrderCard key={order.id}
-            order={order}
-            STATUS={STATUS}
-            requestReturn={requestReturn}
-            cancelOrder={cancelOrder}
-            downloadInvoice={downloadInvoice} />
+//           // <OrderCard key={order.id}
+//           //   order={order}
+//           //   STATUS={STATUS}
+//           //   requestReturn={requestReturn}
+//           //   cancelOrder={cancelOrder}
+//           //   downloadInvoice={downloadInvoice} />
 
-        ))}
+//         ))}
 
-      </div>
-      )
-    }
+//       </div>
+//       )
+//     }
           
           
                  

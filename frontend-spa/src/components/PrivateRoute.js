@@ -16,6 +16,7 @@ function PrivateRoute  ({ children }) {
                 });
                 setIsAuth(true);
             }catch (err) {
+                console.log("PROFILE ERROR:", err);
                 setIsAuth(false);
 
             }

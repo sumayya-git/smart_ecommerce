@@ -37,11 +37,14 @@ function Login() {
       
       try{
         setLoading(true)
-        await loginUser({
+        const res = await loginUser({
         
            username,
            password,
         })
+
+        console.log("LOGIN RESPONSE =",res)
+        
 
        
       
@@ -53,7 +56,9 @@ function Login() {
 
         
 
-            toast.success("Login success✅");
+            // toast.success("Login success✅");
+
+            // return;
 
             
             navigate("/")
@@ -102,7 +107,7 @@ return(
         
         <br /><br />
 
-        <button type="submit" disabled={loading}>{loading ? "Loggingvon...": "Login"}</button>
+        <button type="submit" disabled={loading}>{loading ? "Logging on...": "Login"}</button>
 
 
        </form>

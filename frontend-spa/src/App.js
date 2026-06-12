@@ -11,31 +11,39 @@ import Login from "./pages/Login";
 import AdminDashboard from "./AdminDashboard";
 import AdminRoute from "./components/AdminRoute";
 
-import PrivateRoute from "./components/PrivateRoute";
+// import PrivateRoute from "./components/PrivateRoute";
 
 import ProductDetails from "./pages/ProductDetails";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import  EditProfile  from "./pages/EditProfile";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+// import { ToastContainer } from "react-toastify";
+// import "react-toastify/dist/ReactToastify.css";
 import Checkout from "./pages/Checkout";
 import CategoryProducts  from "./pages/CategoryProducts";
 import API from "./api";
+import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
 
-  console.log(Register);
-  console.log(Login);
-  console.log(AdminDashboard);
-  console.log(ToastContainer);
-  console.log(Navbar);
-  console.log(AdminRoute);
-  console.log(PrivateRoute);
-  console.log(EditProfile);
-  console.log(Checkout);
-  console.log(CategoryProducts);
-  console.log(ProductDetails);
+  // console.log(Register);
+  // // console.log(Login);
+  // // console.log(AdminDashboard);
+  // // console.log(ToastContainer);
+  // // console.log(Navbar);
+  // // console.log(AdminRoute);
+  // // console.log(PrivateRoute);
+  // // console.log(EditProfile);
+  // // console.log(Checkout);
+  // // console.log(CategoryProducts);
+  // // console.log(ProductDetails);
+  // // console.log(CategoryHome);
+  // console.log(Orders);
+
+  // // console.log("Login",Login);
+  // console.log("Router",Router);
+  // console.log("Routes",Routes);
+  // console.log("Route",Route);
 
 
 
@@ -93,6 +101,14 @@ useEffect(() => {
     
     
     <Router>
+
+      
+       
+        
+    
+    
+  
+
       <Navbar cartCount={cartCount} refreshCart={fetchCartCount}/>
       <Routes>
         <Route path="/" element={<CategoryHome />} />
@@ -110,10 +126,12 @@ useEffect(() => {
         <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
         <Route path="/category/:category" element={<CategoryProducts />} />
       </Routes>
-         <ToastContainer position="top-right" autoClose={3000} />
+         {/* <ToastContainer position="top-right" autoClose={3000} />  */}
 
-    </Router>
-    );
+         </Router>
+  );
+
+    
 }
    
 export default App;
