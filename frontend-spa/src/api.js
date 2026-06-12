@@ -27,6 +27,8 @@ function getCSRFToken(){
 }
 
 API.interceptors.request.use((config) => {
+    console.log(document.cookie)
+
     const token = getCSRFToken();
 
     console.log("CSRF TOKEN =", token)
