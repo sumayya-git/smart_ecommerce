@@ -88,7 +88,7 @@ CORS_ALLOWED_ORIGINS = [
    
     
     "http://localhost:3000",
-    "https://smart-ecommerce-gwjd.onrender.com",
+    "https://smart-ecommerce-web.onrender.com",
 
 
    
