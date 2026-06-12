@@ -267,6 +267,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "smart-ecommerce-gwjd.onrender.com",
+    "smart-ecommerce-web.onrender.com",
     "localhost",
     "127.0.0.1"
 ]
