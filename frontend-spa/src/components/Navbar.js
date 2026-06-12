@@ -108,12 +108,18 @@ function Navbar({ cartCount, refreshCart }) {
     
     
   const logout = async () => {
+
+    console.log("LOGOUT CLICKED");
     
     try {
+
+      console.log("before logout");
      
-      await getProfile()
+     
       
-      await logoutUser()
+      const res = await logoutUser()
+
+      console.log("Logout response", res);
        
         
         
@@ -128,7 +134,7 @@ function Navbar({ cartCount, refreshCart }) {
    
     window.location.href="/login";
     } catch (err) {
-      console.log("Logout error:",err);
+      console.log("Logout error:",err.response?.data)
     }
   };
 
