@@ -104,46 +104,34 @@ useEffect(() => {
     
   return (
     
-    <Router>
-       <Routes>
-
-        <Route path="/" element={<CategoryHome />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-       </Routes>
-
-        </Router>
-
-      
-       
-        
+        <Router>
     
     
   
 
-  //   {/* //   <Navbar cartCount={cartCount} refreshCart={fetchCartCount}/>
-  //   //   <Routes>
-  //   //     <Route path="/" element={<CategoryHome />} />
+       <Navbar cartCount={cartCount} refreshCart={fetchCartCount}/> 
+      <Routes>
+        <Route path="/" element={<CategoryHome />} />
        
        
-  //   //     <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
-  //   //     <Route path="/orders" element={<PrivateRoute><Orders /></PrivateRoute>} />
-  //   //     <Route path="/login" element={<Login />} />
-  //   //     <Route path="/product/:id" element={<ProductDetails refreshCart={fetchCartCount} />} />
-  //   //     <Route path="/register" element={<Register />} />
-  //   //     <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-  //   //     <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
+        <Route path="/orders" element={<PrivateRoute><Orders /></PrivateRoute>} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/product/:id" element={<ProductDetails refreshCart={fetchCartCount} />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
 
-  //   //     <Route path="/edit-profile" element={<EditProfile />} />
-  //   //     <Route path="/checkout" element={<Checkout />} />
-  //   //     <Route path="/category/:category" element={<CategoryProducts />} />
-  //   //   </Routes>
-  //   //      {/* <ToastContainer position="top-right" autoClose={3000} />  */}
+        <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/checkout" element={<Checkout />} />
+        <Route path="/category/:category" element={<CategoryProducts />} />
+      </Routes>
+          {/* // <ToastContainer position="top-right" autoClose={3000} />   */}
 
-  //   //     
-  // ); */}
-
+         </Router>
   );
+
+    
 }
    
 export default App;

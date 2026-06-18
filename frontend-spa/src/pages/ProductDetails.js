@@ -7,7 +7,7 @@ import { fetchProductDetails } from "../services/productService";
 
 import  { addToCart } from "../services/cartService"; 
 
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 
 function ProductDetails({refreshCart}){
@@ -42,7 +42,7 @@ function ProductDetails({refreshCart}){
         if (!product) return;
 
         if (product.stock === 0) {
-            toast.warning("Out of stock ❌");
+            // toast.warning("Out of stock ❌");
             return;
         }
         
@@ -61,9 +61,9 @@ function ProductDetails({refreshCart}){
 
             refreshCart();
 
-           
+                 alert("added to cart");
             
-               toast.success("Added to cart 🛒");
+            //    toast.success("Added to cart 🛒");
 
                window.dispatchEvent(new Event("cart Updated"));
                 
@@ -71,11 +71,11 @@ function ProductDetails({refreshCart}){
             console.log(err);
 
             if (err.response?.status === 401) {
-                toast.warning("Please login first");
+                // toast.warning("Please login first");
                 navigate("/login");
             } else {
              
-            toast.error("Error ❌");
+            // toast.error("Error ❌");
         }
 
     } finally {
@@ -89,7 +89,7 @@ function ProductDetails({refreshCart}){
             if(!product) return;
             if(product.stock === 0) {
 
-                 toast.warning(" out of stock ❌");
+                //  toast.warning(" out of stock ❌");
                 return;
             }
             
@@ -113,11 +113,11 @@ function ProductDetails({refreshCart}){
                 console.log(err);
                 
                 if(err.response?.status === 401) {
-                    toast.warning("Login first");
+                    // toast.warning("Login first");
                     navigate("/login");
                 } else {
              
-                  toast.error("Error ❌");
+                //   toast.error("Error ❌");
                 }
 
             } finally{

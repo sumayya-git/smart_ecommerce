@@ -50,7 +50,11 @@ function Login() {
       
        
 
-        window.dispatchEvent(new Event("userChanged"));
+        window.dispatchEvent(new CustomEvent("userChanged",{
+          detail:{
+            username:username
+          }
+        }));
           
                
 

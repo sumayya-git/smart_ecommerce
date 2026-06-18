@@ -30,7 +30,7 @@ function Register() {
             console.log("REGISTER SUCCESS");
 
 
-            toast.success("User created");
+            // toast.success("User created");
 
             console.log("TOAST SUCCESS");
             navigate("/login");
