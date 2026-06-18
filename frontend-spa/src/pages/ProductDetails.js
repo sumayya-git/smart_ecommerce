@@ -126,6 +126,9 @@ function ProductDetails({refreshCart}){
         
         };
 
+
+
+
     
 
     if(loading){
@@ -133,16 +136,20 @@ function ProductDetails({refreshCart}){
         >Loading...</h2>);
     }
 
+    console.log(product);
+
     return(
         <div style={{padding:"20px"}}>
             {product.image && (
-              <img src={product.image}
+              <img src={product.image?.replace("https://smart-ecommerce-gwjd.onrender.com","http://127.0.0.1:8000")}
                 alt={product.name}
                 style={{
                     width:"300px",
                     height:"300px",
-                    objectFit:"cover"
+                    objectFit:"contain",
+                    border:"1px solid #ddd"
                 }}
+                
              />
             )}
             <h2>{product.name}</h2>

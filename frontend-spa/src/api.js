@@ -13,7 +13,8 @@ const API=axios.create({
 
 function getCSRFToken(){
     const name = "csrftoken=";
-    const cookies = document.cookie.split(";");
+    const decodedCookie = decodeURIComponent(document.cookie);
+    const cookies = decodedCookie.split(";");
 
 
     for(let cookie of cookies){
@@ -28,6 +29,7 @@ function getCSRFToken(){
 
 API.interceptors.request.use((config) => {
     console.log(document.cookie)
+    console.log(getCSRFToken())
 
     const token = getCSRFToken();
 

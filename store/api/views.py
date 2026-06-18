@@ -181,11 +181,13 @@ def update_profile(request):
 
     return Response({"message":"Profile updated successfully" })
        
+@csrf_exempt
 @api_view(['POST'])
 @permission_classes([AllowAny])
-@ratelimit(key='ip', rate='3/m',method='POST', block=True)
+# @ratelimit(key='ip', rate='3/m',method='POST', block=True)
 def register(request):
     authentication_classes=[]
+    print("HEADER TOKEN =", request.META.get("HTTP_x_CSRFTOKEN"))
     username = request.data['username']
     email = request.data['email']
     password = request.data['password']
@@ -840,7 +842,7 @@ class CartDetailAPIView(APIView):
     
 
 class AddToCartAPIView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
 
     def post(self,request,product_id):
         

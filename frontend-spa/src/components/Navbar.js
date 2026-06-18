@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom"
 
 
-import { FaChevronDown } from "react-icons/fa";
-import { FaBars } from "react-icons/fa";
+// import { FaChevronDown } from "react-icons/fa";
+// import { FaBars } from "react-icons/fa";
 
 import { getProfile, logoutUser } from "../services/authService";
 
@@ -13,9 +13,7 @@ import { fetchCart } from "../services/cartService";
 
 function Navbar({ cartCount, refreshCart }) {
 
-  console.log(FaBars);
-  console.log(FaChevronDown);
-
+  
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -314,7 +312,7 @@ function Navbar({ cartCount, refreshCart }) {
                          
                  }}>
                   <p style={{ cursor:"pointer"}}>
-                    <FaBars /> All
+                        All
                   </p>
                   <p>Today's Deals</p>
                   <p>Mobiles</p>

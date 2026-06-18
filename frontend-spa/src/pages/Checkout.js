@@ -157,9 +157,11 @@ function Checkout(){
 
     return(
         <div style={{padding:"20px"}}>
+
+            Checkout working
             
 
-           <PaymentMethod paymentMethod={paymentMethod}
+           {/* <PaymentMethod paymentMethod={paymentMethod}
                         setPaymentMethod={setPaymentMethod}
                         />
 
@@ -168,7 +170,7 @@ function Checkout(){
 
 
             <OrderSummary totalAmount={totalAmount}
-                placeOrder={placeOrder}/>
+                placeOrder={placeOrder}/> */}
 
 
 

@@ -23,22 +23,27 @@ import Checkout from "./pages/Checkout";
 import CategoryProducts  from "./pages/CategoryProducts";
 import API from "./api";
 import PrivateRoute from "./components/PrivateRoute";
+import AddressForm from "./components/AddressForm";
+import OrderSummary from "./components/OrderSummary";
 
 function App() {
 
-  // console.log(Register);
-  // // console.log(Login);
-  // // console.log(AdminDashboard);
+  console.log("Register =", Register);
+  console.log("Login =", Login);
+  console.log("AdminDashboard =", AdminDashboard);
   // // console.log(ToastContainer);
-  // // console.log(Navbar);
-  // // console.log(AdminRoute);
-  // // console.log(PrivateRoute);
-  // // console.log(EditProfile);
-  // // console.log(Checkout);
-  // // console.log(CategoryProducts);
-  // // console.log(ProductDetails);
-  // // console.log(CategoryHome);
-  // console.log(Orders);
+  console.log("Navbar =", Navbar);
+  console.log("AdminRoute =", AdminRoute);
+  console.log("PrivateRoute =", PrivateRoute);
+  console.log("EditProfile -", EditProfile);
+  console.log("Checkout =", Checkout);
+  console.log("CategoryProducts =",CategoryProducts);
+  console.log("ProductDetails =",ProductDetails);
+  console.log("CategoryHome =", CategoryHome);
+  console.log("AddressForm =", AddressForm);
+  console.log("OrderSummary =", OrderSummary)
+  console.log("Orders =", Orders);
+  console.log("Cart =", Cart);
 
   // // console.log("Login",Login);
   // console.log("Router",Router);
@@ -99,8 +104,15 @@ useEffect(() => {
     
   return (
     
-    
     <Router>
+       <Routes>
+
+        <Route path="/" element={<CategoryHome />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+       </Routes>
+
+        </Router>
 
       
        
@@ -109,29 +121,29 @@ useEffect(() => {
     
   
 
-      <Navbar cartCount={cartCount} refreshCart={fetchCartCount}/>
-      <Routes>
-        <Route path="/" element={<CategoryHome />} />
+  //   {/* //   <Navbar cartCount={cartCount} refreshCart={fetchCartCount}/>
+  //   //   <Routes>
+  //   //     <Route path="/" element={<CategoryHome />} />
        
        
-        <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
-        <Route path="/orders" element={<PrivateRoute><Orders /></PrivateRoute>} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/product/:id" element={<ProductDetails refreshCart={fetchCartCount} />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+  //   //     <Route path="/cart" element={<PrivateRoute><Cart /></PrivateRoute>} />
+  //   //     <Route path="/orders" element={<PrivateRoute><Orders /></PrivateRoute>} />
+  //   //     <Route path="/login" element={<Login />} />
+  //   //     <Route path="/product/:id" element={<ProductDetails refreshCart={fetchCartCount} />} />
+  //   //     <Route path="/register" element={<Register />} />
+  //   //     <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+  //   //     <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
 
-        <Route path="/edit-profile" element={<EditProfile />} />
-        <Route path="/checkout" element={<PrivateRoute><Checkout /></PrivateRoute>} />
-        <Route path="/category/:category" element={<CategoryProducts />} />
-      </Routes>
-         {/* <ToastContainer position="top-right" autoClose={3000} />  */}
+  //   //     <Route path="/edit-profile" element={<EditProfile />} />
+  //   //     <Route path="/checkout" element={<Checkout />} />
+  //   //     <Route path="/category/:category" element={<CategoryProducts />} />
+  //   //   </Routes>
+  //   //      {/* <ToastContainer position="top-right" autoClose={3000} />  */}
 
-         </Router>
+  //   //     
+  // ); */}
+
   );
-
-    
 }
    
 export default App;

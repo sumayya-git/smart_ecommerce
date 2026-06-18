@@ -87,6 +87,8 @@ function CategoryProducts() {
         window.dispatchEvent(new Event("cartUpdated"));
     }catch (err) {
       console.log(err);
+      console.log(err.response);
+      console.log(err.response?.data);
 
       if(err.response?.status === 401) {
 
@@ -142,7 +144,7 @@ function CategoryProducts() {
                        
                     }}>
                      
-                        <img src={product.image} alt={product.name} 
+                        <img src={product.image.replace("https://smart-ecommerce-gwjd.onrender.com","http://127.0.0.1:8000")}alt={product.name} 
                          style={{ width:"100%", height:"150px", objectFit:"contain"}} />
                        
                        
