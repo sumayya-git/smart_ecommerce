@@ -130,7 +130,7 @@ function Navbar({ cartCount, refreshCart }) {
 
     
    
-    window.location.href="/login";
+    window.location.href="/";
     } catch (err) {
       console.log("Logout error:",err.response?.data)
     }
