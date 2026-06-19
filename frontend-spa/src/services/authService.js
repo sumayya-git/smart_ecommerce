@@ -2,7 +2,15 @@ import API from "../api"
 
 export const loginUser = async(data) => {
     await API.get("/csrf/");
-    return API.post("/login/", data)
+
+    const res = await API.post("/login/", data);
+
+    console.log("LOGIN RESPONSE", res.data);
+
+    const profile =  await API.get("/profile/");
+    console.log("PROFILE AFTER LOGIN", profile.data);
+    return res;
+    // return API.post("/login/", data)
 }
 
 
