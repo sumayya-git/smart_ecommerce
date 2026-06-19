@@ -2,7 +2,7 @@ import React,{ useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
 
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 
 const getCookie = (name) => {
@@ -37,13 +37,18 @@ function Login() {
       
       try{
         setLoading(true)
+
+        console.log("COOKIE BEFORE LOGIN =", document.cookie);
         const res = await loginUser({
         
            username,
            password,
-        })
+        });
+
 
         console.log("LOGIN RESPONSE =",res)
+
+        console.log("COOKIE AFTER LOGIN =", document.cookie);
         
 
        
@@ -77,7 +82,7 @@ function Login() {
 
         
             
-        toast.error(err.response?.data?.message);
+        // toast.error(err.response?.data?.message);
         }
 
         finally{
