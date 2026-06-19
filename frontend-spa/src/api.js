@@ -28,25 +28,37 @@ function getCSRFToken(){
 }
 
 API.interceptors.request.use((config) => {
-    console.log(document.cookie)
-    console.log(getCSRFToken())
 
-    const token = getCSRFToken();
-
-    console.log("CSRF TOKEN =", token)
-     
-     
-     
-
+    const token = document.cookie 
+        .split(";")
+        .find(row => row.startsWith("csrftoken="))
+        ?.split("=")[1];
     if (token) {
         config.headers["X-CSRFToken"] = token;
 
     }
 
+     return config;
+});
+    
+    // console.log(document.cookie)
+    // console.log(getCSRFToken())
+
+    // const token = getCSRFToken();
+
+    // console.log("CSRF TOKEN =", token)
+     
+     
+     
+
+    // if (token) {
+    //     config.headers["X-CSRFToken"] = token;
+
+    // }
+
    
 
-    return config;
-});
+    
 
 
 export default API;

@@ -1,6 +1,7 @@
 import API from "../api"
 
-export const loginUser = (data) => {
+export const loginUser = async(data) => {
+    await API.get("/csrf/");
     return API.post("/login/", data)
 }
 
@@ -16,6 +17,12 @@ export const getProfile = async () => {
 
 
 export const logoutUser = async () => {
-    return await API.post("/logout/")
+
+    await fetch("https://smart-ecommerce-gwjd.onrender.com/api/csrf/",
+        {
+            credentials: "include"
+        }
+    );
+    return await API.post("/logout/");
 }
 
