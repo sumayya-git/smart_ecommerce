@@ -15,14 +15,21 @@ const API=axios.create({
 });
 
 API.interceptors.request.use((config) => {
+    console.log("INTERCEPTOR RUNNING");
 
-    const csrftoken = document.cookie 
-        .split(";")
-        .find(row => row.startsWith("csrftoken="))
-        ?.split("=")[1];
+    console.log("ALL COOKIES =", document.cookie);
 
-    console.log("COOKIE =", document.cookie);
-    console.log("CSRF TOKEN =", token);
+    const match = document.cookie.match(/csrftoken=([^;]+)/);
+
+    const csrftoken = match ? match[1] : null;
+
+    // const csrftoken = document.cookie 
+    //     .split(";")
+    //     .find(row => row.startsWith("csrftoken="))
+    //     ?.split("=")[1];
+
+    
+    console.log("CSRF TOKEN =", csrftoken);
     if (csrftoken) {
         config.headers["X-CSRFToken"] = csrftoken;
 
