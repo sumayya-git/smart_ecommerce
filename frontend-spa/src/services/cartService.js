@@ -24,47 +24,47 @@ export const fetchCart = () => {
 
 export const addToCart = async (productId, quantity) => {
 
-    const csrftoken = getCSRFToken();
+    // const csrftoken = getCSRFToken();
 
-    console.log("CSRFTOKEN =", csrftoken);
+    // console.log("CSRFTOKEN =", csrftoken);
 
     return await API.post(`/cart/add/${productId}/`, { quantity },
-        {
-            headers: {
-                "X-CSRFToken": csrftoken
-            }
-        }
+        // {
+        //     headers: {
+        //         "X-CSRFToken": csrftoken
+        //     }
+        // }
        
     );
 }
 
 export const removeCartItem = (itemId) => {
 
-    const csrftoken = getCSRFToken();
+    // const csrftoken = getCSRFToken();
 
     return API.post(`/cart/remove/${itemId}/`,
         {},
-        {
-            headers: {
-                "X-CSRFToken": csrftoken
-            }
-        }
+        // {
+        //     headers: {
+        //         "X-CSRFToken": csrftoken
+        //     }
+        // }
     );
 }
 
 export const decreaseCartItem = (productId) => {
 
-     const csrftoken = getCSRFToken();
+    //  const csrftoken = getCSRFToken();
      
      
      return API.post(`/cart/decrease/${productId}/`,
 
         {},
-        {
-            headers: {
-                "X-CSRFToken": csrftoken
-            }
-        }
+        // {
+        //     headers: {
+        //         "X-CSRFToken": csrftoken
+        //     }
+        // }
     );
 
 }

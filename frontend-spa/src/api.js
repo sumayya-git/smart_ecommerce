@@ -21,8 +21,8 @@ API.interceptors.request.use((config) => {
         .find(row => row.startsWith("csrftoken="))
         ?.split("=")[1];
 
-    // console.log("COOKIE =", document.cookie);
-    // console.log("CSRF TOKEN =", token);
+    console.log("COOKIE =", document.cookie);
+    console.log("CSRF TOKEN =", token);
     if (csrftoken) {
         config.headers["X-CSRFToken"] = csrftoken;
 
