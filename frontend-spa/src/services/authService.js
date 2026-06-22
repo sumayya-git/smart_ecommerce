@@ -26,11 +26,19 @@ export const getProfile = async () => {
 
 export const logoutUser = async () => {
 
-    await fetch("https://smart-ecommerce-gwjd.onrender.com/api/csrf/",
+   const csrftoken = document.cookie
+        .split(";")
+        .find(row => row.startsWith("csrftoken="))
+        ?.split("=")[1];
+    return await API.post("/logout/",
+        {},
         {
-            credentials: "include"
+            headers: {
+                "X-CSRFToken": csrftoken
+            }
         }
     );
-    return await API.post("/logout/");
+
+
 }
 

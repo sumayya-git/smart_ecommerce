@@ -69,13 +69,15 @@ from.utils import success_response, error_response
 from django_ratelimit.decorators import ratelimit # fixed
 
 from django.utils.decorators import method_decorator
+from django.middleware.csrf import get_token
 
 
 
 
 @ensure_csrf_cookie
 def csrf(request):
-    return JsonResponse({"success": True})
+    csrf_token = get_token(request)
+    return JsonResponse({"success": True, "csrfToken":csrf_token})
 
 
     

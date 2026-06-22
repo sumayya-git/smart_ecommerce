@@ -1,20 +1,72 @@
 import API from "../api"
 
+function getCSRFToken() {
+
+    console.log("ALL COOKIES =", document.cookie);
+
+    const match = document.cookie.match(/csrftoken=([^;]+)/);
+
+    return match ? match[1]:"";
+}
+//     const value = `; ${document.cookie}`;
+//     const parts = value.split(`; csrftoken=`);
+//     if (parts.length === 2) {
+//         return parts.pop().split(";").shift();
+
+//     }
+//     return "";
+// }
+
 export const fetchCart = () => {
     return API.get("/cart/")
 }
 
 
-export const addToCart = (productId) => {
-    return API.post(`/cart/add/${productId}/`)
+export const addToCart = async (productId, quantity) => {
+
+    const csrftoken = getCSRFToken();
+
+    console.log("CSRFTOKEN =", csrftoken);
+
+    return await API.post(`/cart/add/${productId}/`, { quantity },
+        {
+            headers: {
+                "X-CSRFToken": csrftoken
+            }
+        }
+       
+    );
 }
 
 export const removeCartItem = (itemId) => {
-    return API.post(`/cart/remove/${itemId}/`)
+
+    const csrftoken = getCSRFToken();
+
+    return API.post(`/cart/remove/${itemId}/`,
+        {},
+        {
+            headers: {
+                "X-CSRFToken": csrftoken
+            }
+        }
+    );
 }
 
 export const decreaseCartItem = (productId) => {
-    return API.post(`/cart/decrease/${productId}/`)
+
+     const csrftoken = getCSRFToken();
+     
+     
+     return API.post(`/cart/decrease/${productId}/`,
+
+        {},
+        {
+            headers: {
+                "X-CSRFToken": csrftoken
+            }
+        }
+    );
+
 }
 
 
