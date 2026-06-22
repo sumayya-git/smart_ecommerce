@@ -76,8 +76,8 @@ from django.middleware.csrf import get_token
 
 @ensure_csrf_cookie
 def csrf(request):
-    csrf_token = get_token(request)
-    return JsonResponse({"success": True, "csrfToken":csrf_token})
+    # csrf_token = get_token(request)
+    return JsonResponse({"csrfToken":get_token(request)})
 
 
     
