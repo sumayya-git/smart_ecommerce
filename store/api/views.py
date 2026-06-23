@@ -852,6 +852,8 @@ class AddToCartAPIView(APIView):
     permission_classes = []
 
     def post(self,request,product_id):
+
+        print("ADD TO CART HIT")
         
         product = get_object_or_404(Product, id=product_id)
 
