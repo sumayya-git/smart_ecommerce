@@ -845,6 +845,9 @@ class CartDetailAPIView(APIView):
           data=serializer.data)
     
 
+
+    
+@method_decorator(csrf_exempt, name="dispatch")
 class AddToCartAPIView(APIView):
     permission_classes = []
 
@@ -867,7 +870,7 @@ class AddToCartAPIView(APIView):
 
         return success_response(message= "Item added to cart")
     
-
+@method_decorator(csrf_exempt, name="dispatch")
 class DecreaseCartItemAPI(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -889,7 +892,7 @@ class DecreaseCartItemAPI(APIView):
 
         return success_response(message= "Quantity decreased")
     
-
+@method_decorator(csrf_exempt, name="dispatch")
 class RemoveFromCartAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
