@@ -144,7 +144,7 @@ function CategoryProducts() {
                        
                     }}>
                      
-                        <img src={product.image.replace("https://smart-ecommerce-gwjd.onrender.com","http://127.0.0.1:8000")}alt={product.name} 
+                        <img src={product.image.replace("https://smart-ecommerce-backend.onrender.com","http://127.0.0.1:8000")}alt={product.name} 
                          style={{ width:"100%", height:"150px", objectFit:"contain"}} />
                        
                        
