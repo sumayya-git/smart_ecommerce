@@ -71,7 +71,7 @@ from django_ratelimit.decorators import ratelimit # fixed
 from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
 
-from rest_framework.authentication import SessionAuthentication
+
 
 
 
@@ -856,13 +856,11 @@ class CartDetailAPIView(APIView):
 
 
 
-class CsrfExemptSessionAuthentication(SessionAuthentication):
-    def enforce_csrf(self, request):
-        return
+
     
 @method_decorator(csrf_exempt, name="dispatch")
 class AddToCartAPIView(APIView):
-    authentication_classes = [CsrfExemptSessionAuthentication]
+   
     permission_classes = []
 
     def post(self,request,product_id):
