@@ -40,6 +40,7 @@ CSRF_TRUSTED_ORIGINS = [
                           "http://localhost:3001",
                         
                          "https://smart-ecommerce-gwjd.onrender.com",
+                         "https://smart-ecommerce-web.onrender.com",
                         ]
 
 
