@@ -27,18 +27,24 @@ export const fetchCart = () => {
 
 export const addToCart = async (productId, quantity) => {
 
-    // const csrftoken = getCSRFToken();
+    const csrftoken = document.cookie
+        .split(';')
+        .find(row => row.startsWith('csrftoken='))
+        ?.split('=')[1];
+    console.log("TOKEN =", csrftoken);
+
+    
 
     // console.log("CSRFTOKEN =", csrftoken);
 
     
 
     return await API.post(`/cart/add/${productId}/`, { quantity },
-        // {
-        //     headers: {
-        //         "X-CSRFToken": csrftoken
-        //     }
-        // }
+        {
+            headers: {
+                "X-CSRFToken": csrftoken
+            }
+        }
        
     );
 }
