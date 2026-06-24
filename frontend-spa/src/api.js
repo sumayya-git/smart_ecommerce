@@ -1,7 +1,5 @@
 import axios from "axios";
 
-// console.log(process.env.REACT_APP_API_BASE_URL);
-
 const API=axios.create({
     baseURL:process.env.REACT_APP_API_BASE_URL,
     withCredentials: true,
@@ -13,6 +11,45 @@ const API=axios.create({
    
     
 });
+
+console.log("API.JS LOADED");
+console.log(API.defaults);
+
+export default API;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // API.interceptors.request.use((config) => {
 //     console.log("INTERCEPTOR RUNNING");
@@ -38,7 +75,7 @@ const API=axios.create({
 //      return config;
 // });
 
-export default API;
+
 
 
 

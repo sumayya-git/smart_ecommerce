@@ -17,6 +17,9 @@ function getCSRFToken() {
 //     return "";
 // }
 
+console.log(API.defaults.xsrfCookieName);
+console.log(API.defaults.xsrfHeaderName);
+
 export const fetchCart = () => {
     return API.get("/cart/")
 }
@@ -27,6 +30,8 @@ export const addToCart = async (productId, quantity) => {
     // const csrftoken = getCSRFToken();
 
     // console.log("CSRFTOKEN =", csrftoken);
+
+    
 
     return await API.post(`/cart/add/${productId}/`, { quantity },
         // {

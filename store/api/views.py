@@ -854,7 +854,8 @@ class AddToCartAPIView(APIView):
     def post(self,request,product_id):
 
         print("ADD TO CART HIT")
-        
+        print("USER =", request.user)
+        print("IS AUTH =", request.user.is_authenticated)        
         product = get_object_or_404(Product, id=product_id)
 
         cart, _ = Cart.objects.get_or_create(user=request.user)
