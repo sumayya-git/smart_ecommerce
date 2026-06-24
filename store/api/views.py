@@ -96,12 +96,15 @@ class LoginView(APIView):
            login(request, user)
 
           
-           return success_response(
-               message= "Login successful",
-               data={
-                   "username":user.username,
-                   "is_staff": user.is_staff
-               })
+           return JsonResponse({
+               "success": True,
+               "csrftoken": get_token(request)
+           })
+            #    message= "Login successful",
+            #    data={
+            #        "username":user.username,
+            #        "is_staff": user.is_staff
+            #    })
         
            
           
