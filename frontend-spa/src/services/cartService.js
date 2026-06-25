@@ -29,27 +29,27 @@ export const addToCart = async (productId, quantity) => {
 
     console.log("ADD TO CART FUNCTION CALLED");
 
-    const csrftoken = document.cookie
-        .split(';')
-        .find(row => row.startsWith('csrftoken='))
-        ?.split('=')[1];
-    console.log("TOKEN =", csrftoken);
+    // const csrftoken = document.cookie
+    //     .split(';')
+    //     .find(row => row.startsWith('csrftoken='))
+    //     ?.split('=')[1];
+    // console.log("TOKEN =", csrftoken);
 
-    console.log("COOKIE =", document.cookie);
-    console.log("HEADER TOKEN =", csrftoken);
+    // console.log("COOKIE =", document.cookie);
+    // console.log("HEADER TOKEN =", csrftoken);
 
     
 
-    // console.log("CSRFTOKEN =", csrftoken);
+    // // console.log("CSRFTOKEN =", csrftoken);
 
-    console.log("ABOUT TO SEND REQUEST");
+    // console.log("ABOUT TO SEND REQUEST");
 
     return await API.post(`/cart/add/${productId}/`, { quantity },
-        {
-            headers: {
-                "X-CSRFToken": csrftoken
-            }
-        }
+        // {
+        //     headers: {
+        //         "X-CSRFToken": csrftoken
+        //     }
+        // }
        
     );
 }
