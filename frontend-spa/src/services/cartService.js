@@ -27,6 +27,8 @@ export const fetchCart = () => {
 
 export const addToCart = async (productId, quantity) => {
 
+    console.log("ADD TO CART FUNCTION CALLED");
+
     const csrftoken = document.cookie
         .split(';')
         .find(row => row.startsWith('csrftoken='))
@@ -37,7 +39,7 @@ export const addToCart = async (productId, quantity) => {
 
     // console.log("CSRFTOKEN =", csrftoken);
 
-    
+    console.log("ABOUT TO SEND REQUEST");
 
     return await API.post(`/cart/add/${productId}/`, { quantity },
         {
