@@ -80,11 +80,7 @@ from django.middleware.csrf import get_token
 def csrf(request):
     token = get_token(request)
 
-    response = JsonResponse({"csrftoken":token})
-
-    response.set_cookie("csrftoken", token, secure=True, samesite="None")
-    return response
-
+    return JsonResponse({"csrftoken": token})
 
     
 @method_decorator(ensure_csrf_cookie, name='dispatch')
