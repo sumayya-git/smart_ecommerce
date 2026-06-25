@@ -5,7 +5,7 @@ const API=axios.create({
     withCredentials: true,
 
     xsrfCookieName: "csrftoken",
-    xsrfHeeaderName: "X-CSRFToken",
+    xsrfHeaderName: "X-CSRFToken",
    
 
    
