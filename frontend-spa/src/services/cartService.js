@@ -35,6 +35,9 @@ export const addToCart = async (productId, quantity) => {
         ?.split('=')[1];
     console.log("TOKEN =", csrftoken);
 
+    console.log("COOKIE =", document.cookie);
+    console.log("HEADER TOKEN =", csrftoken);
+
     
 
     // console.log("CSRFTOKEN =", csrftoken);
