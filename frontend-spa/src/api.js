@@ -18,8 +18,8 @@ console.log("API.JS LOADED");
 console.log(API.defaults);
 
 API.interceptors.request.use((config) => {
-      console.log("REQUEST HEADERS =", config.headers.toJSON());
-
+      console.log("INTERCEPTOR RUNNING");
+      console.log(document.cookie)
       return config;
  });
 
