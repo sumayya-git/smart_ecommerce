@@ -58,6 +58,7 @@ from store.models import Category
 from .serializers import CategorySerializer
 from django.contrib.auth import authenticate, login, logout
 
+
 from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.decorators.csrf import csrf_exempt
@@ -95,7 +96,9 @@ class LoginView(APIView):
         user = authenticate(request, username=username, password=password)
 
         if user is not None:
+           print("BEFORE LOGIN TOKEN:", get_token(request))
            login(request, user)
+           print("AFTER LOGIN TOKEN:",get_token(request))
 
           
            return JsonResponse({
@@ -860,6 +863,15 @@ class AddToCartAPIView(APIView):
     permission_classes = []
 
     def post(self,request,product_id):
+
+        print("-" * 60)
+        print("PATH:", request.path)
+        print("METHOD:", request.method)
+        print("COOKIES:", request.COOKIES)
+        print("CSRF HEADER:", request.META.get("HTTP_X_CSRFTOKEN"))
+        print("ORIGIN:", request.META.get("HTTP_ORIGIN"))
+        print("REFERER:", request.META.get("HTTP_REFERER"))
+        print("=" * 60)
 
         print("ADD TO CART HIT")
         print("USER =", request.user)

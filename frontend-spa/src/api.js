@@ -12,8 +12,16 @@ const API=axios.create({
     
 });
 
+console.log("BASE URL =", process.env.REACT_APP_API_BASE_URL);
+
 console.log("API.JS LOADED");
 console.log(API.defaults);
+
+API.interceptors.request.use((config) => {
+      console.log("REQUEST HEADERS =", config.headers.toJSON());
+
+      return config;
+ });
 
 export default API;
 
