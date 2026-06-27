@@ -864,6 +864,8 @@ class AddToCartAPIView(APIView):
 
     def post(self,request,product_id):
 
+        print("ADD TO CART VIEW ENTERED")
+
         print("-" * 60)
         print("PATH:", request.path)
         print("METHOD:", request.method)
