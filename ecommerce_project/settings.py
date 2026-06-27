@@ -324,3 +324,6 @@ LOGGING = {
     },
 
 }
+
+
+CSRF_FAILURE_VIEW = "store.api.views.csrf_failure"

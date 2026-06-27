@@ -74,6 +74,33 @@ from django.middleware.csrf import get_token
 
 
 
+def csrf_failure(request, reason=""):
+     
+
+        
+        print("-" * 60)
+        print("CSRF FAILURE")
+        print("REASON:", reason)
+       
+        print("COOKIE:", request.COOKIES)
+       
+        print("HEADER:", request.META.get("HTTP_X_CSRFTOKEN"))
+        print("=" * 60)
+
+
+
+        return JsonResponse(
+            {
+                "error": "CSRF Failed",
+                "reason": reason,
+            },
+            status=403,
+        )
+
+
+
+
+
 
 
 
