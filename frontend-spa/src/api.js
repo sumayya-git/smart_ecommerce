@@ -18,6 +18,8 @@ console.log("API.JS LOADED");
 console.log(API.defaults);
 
 API.interceptors.request.use((config) => {
+
+    console.log("document.cookie =", document.cookie);
      
       console.log("INTERCEPTOR RUNNING");
 
@@ -26,12 +28,12 @@ API.interceptors.request.use((config) => {
       const match = document.cookie.match(/csrftoken=([^;]+)/);
       const csrftoken = match ? match[1] : null;
 
-      console.log("CSRF TOKEN =", csrftoken);
-        if (csrftoken) {
-            config.headers["X-CSRFToken"] = csrftoken;
+      console.log("Sending CSRF =", csrftoken);
+        // if (csrftoken) {
+      delete config.headers["X-CSRFToken"];
 
-        }
-      console.log("FINAL HEADERS =", config.headers.toJSON());
+    //     }
+    //   console.log("FINAL HEADERS =", config.headers.toJSON());
       return config;
  });
 

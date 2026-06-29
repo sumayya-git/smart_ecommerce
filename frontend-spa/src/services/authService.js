@@ -7,6 +7,8 @@ export const loginUser = async(data) => {
 
     console.log("LOGIN RESPONSE", res.data);
 
+    await API.get("/csrf/");
+
     const profile =  await API.get("/profile/");
     console.log("PROFILE AFTER LOGIN", profile.data);
     return res;
