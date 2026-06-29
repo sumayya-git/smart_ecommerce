@@ -29,15 +29,16 @@ API.interceptors.request.use((config) => {
       const csrftoken = match ? match[1] : null;
 
       console.log("Sending CSRF =", csrftoken);
-        // if (csrftoken) {
-      delete config.headers["X-CSRFToken"];
+        if (csrftoken) {
+    //   delete config.headers["X-CSRFToken"];
 
-    //     }
-    //   console.log("FINAL HEADERS =", config.headers.toJSON());
+        }
+      console.log("FINAL HEADERS =", config.headers.toJSON());
       return config;
  });
 
 export default API;
+
 
 
 

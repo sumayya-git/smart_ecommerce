@@ -31,7 +31,7 @@ function Login() {
 
   
     
-   
+      await API.get("/csrf/");
 
       alert("Login successful✅");
 
