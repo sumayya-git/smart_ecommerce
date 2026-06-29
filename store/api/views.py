@@ -886,8 +886,8 @@ class CartDetailAPIView(APIView):
     
 # @method_decorator(csrf_exempt, name="dispatch")
 class AddToCartAPIView(APIView):
-    authentication_classes = []
-    permission_classes = []
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
 
 
     def post(self,request,product_id):
