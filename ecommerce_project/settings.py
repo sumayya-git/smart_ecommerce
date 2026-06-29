@@ -68,23 +68,33 @@ MIDDLEWARE = [
 
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-
-    'store.api.csrf_debug_middleware.CSRFDebugMiddleware',
-
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    
+
     'django.contrib.sessions.middleware.SessionMiddleware',
-    
     'django.middleware.common.CommonMiddleware',
 
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
 
-    'store.api.csrf_trace_middleware.CSRFTraceMiddleware',
-    
-   
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+
+    # 'store.api.csrf_debug_middleware.CSRFDebugMiddleware',
+
+    
+    
+   
+    
+    
+
+    
+    # 'store.api.csrf_trace_middleware.CSRFTraceMiddleware',
+    
+   
+    
+    
    # 'django_ratelimit.middleware.RatelimitMiddleware',
     
 ]
