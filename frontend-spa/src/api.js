@@ -12,32 +12,34 @@ const API=axios.create({
     
 });
 
-console.log("BASE URL =", process.env.REACT_APP_API_BASE_URL);
-
-console.log("API.JS LOADED");
-console.log(API.defaults);
-
-API.interceptors.request.use((config) => {
-
-    console.log("document.cookie =", document.cookie);
-     
-      console.log("INTERCEPTOR RUNNING");
-
-      console.log("COOKIE =", document.cookie);
-
-      const match = document.cookie.match(/csrftoken=([^;]+)/);
-      const csrftoken = match ? match[1] : null;
-
-      console.log("Sending CSRF =", csrftoken);
-        if (csrftoken) {
-    //   delete config.headers["X-CSRFToken"];
-
-        }
-      console.log("FINAL HEADERS =", config.headers.toJSON());
-      return config;
- });
 
 export default API;
+
+
+// console.log("BASE URL =", process.env.REACT_APP_API_BASE_URL);
+
+// console.log("API.JS LOADED");
+// console.log(API.defaults);
+
+// API.interceptors.request.use((config) => {
+
+//     console.log("document.cookie =", document.cookie);
+     
+//       console.log("INTERCEPTOR RUNNING");
+
+//       console.log("COOKIE =", document.cookie);
+
+//       const match = document.cookie.match(/csrftoken=([^;]+)/);
+//       const csrftoken = match ? match[1] : null;
+
+//       console.log("Sending CSRF =", csrftoken);
+//         if (csrftoken) {
+//             config.headers["X-CSRFToken"] = csrftoken;
+
+//         }
+//       console.log("FINAL HEADERS =", config.headers.toJSON());
+//       return config;
+//  });
 
 
 

@@ -77,7 +77,9 @@ MIDDLEWARE = [
     
     'django.middleware.common.CommonMiddleware',
 
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
+
+    'store.api.csrf_trace_middleware.CSRFTraceMiddleware',
     
    
     'django.contrib.auth.middleware.AuthenticationMiddleware',
