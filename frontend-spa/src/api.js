@@ -21,6 +21,8 @@ API.interceptors.request.use((config) => {
      
       console.log("INTERCEPTOR RUNNING");
 
+      console.log("COOKIE =", document.cookie);
+
       const match = document.cookie.match(/csrftoken=([^;]+)/);
       const csrftoken = match ? match[1] : null;
 
