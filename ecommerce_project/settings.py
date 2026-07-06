@@ -36,11 +36,13 @@ ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS").split(",")
 
 
 CSRF_TRUSTED_ORIGINS = [
-                         "http://localhost:3000",
-                          "http://localhost:3001",
                         
-                         "https://smart-ecommerce-backend.onrender.com",
-                         "https://smart-ecommerce-web.onrender.com",
+                    "http://localhost:3000",
+                    "http://localhost:3001",
+                    "https://smart-ecommerce-backend.onrender.com",
+                    "https://smart-ecommerce-web.onrender.com",
+                    "https://web-production-531cc.up.railway.app",
+
                         ]
 
 
@@ -106,9 +108,12 @@ MIDDLEWARE = [
 CORS_ALLOWED_ORIGINS = [
    
     
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "https://smart-ecommerce-web.onrender.com",
+   
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "https://smart-ecommerce-web.onrender.com",
+            "https://web-production-531cc.up.railway.app",
+
 
 
    
