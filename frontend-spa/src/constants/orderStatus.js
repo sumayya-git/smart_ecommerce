@@ -6,6 +6,7 @@ const STATUS = {
   COMPLETED: "completed",
   REQUESTED: "requested",
   APPROVED: "approved",
+  REJECTED: "rejected",
   DELIVERED: "delivered",
 }
 

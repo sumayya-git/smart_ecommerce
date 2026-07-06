@@ -2,26 +2,7 @@ import React,{ useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/authService";
 
-import API from "../api";
 
-
-// import { toast } from "react-toastify";
-
-
-// const getCookie = (name) => {
-//   let value = null;
-//   if(document.cookie) {
-//     const cookies = document.cookie.split(";");
-//     for (let cookie of cookies) {
-//       cookie = cookie.trim();
-//       if(cookie.startsWith(name + "=")) {
-//         value = decodeURIComponent(cookie.substring(name.length + 1));
-//         break;
-//       }
-//     }
-//   }
-//   return value;
-// };
 
 function Login() {
 
@@ -30,28 +11,23 @@ function Login() {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate();
 
-    // const getCSRFToken = () => {
-    //   return document.cookie .split(";") .find((row) => row.startsWith("csrftoken=")) ?.split("=")[1];
-    // }
-
+   
     const handleLogin = async (e)=> { 
+     
       e.preventDefault();
       console.log("Login clicked");
       
       try{
         setLoading(true)
 
-        console.log("COOKIE BEFORE LOGIN =", document.cookie);
-        const res = await loginUser({
+       
+        await loginUser({
         
            username,
            password,
         });
 
-
-        console.log("LOGIN RESPONSE =",res)
-
-        console.log("COOKIE AFTER LOGIN =", document.cookie);
+        
         
 
        
@@ -60,10 +36,14 @@ function Login() {
 
         window.dispatchEvent(new CustomEvent("userChanged",{
           detail:{
-            username:username
-          }
+            username:username,
+          },
         }));
           
+
+        
+        
+              
                
 
         
@@ -73,7 +53,7 @@ function Login() {
             // return;
 
             
-            navigate("/")
+            navigate("/");
            
 
             
@@ -81,7 +61,7 @@ function Login() {
             
   
       }catch(err){
-        console.log(err)
+        console.log(err);
 
         
             
@@ -89,7 +69,7 @@ function Login() {
         }
 
         finally{
-          setLoading(false)
+          setLoading(false);
         }
 };
         

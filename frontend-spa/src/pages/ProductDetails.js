@@ -65,7 +65,7 @@ function ProductDetails({refreshCart}){
             
             //    toast.success("Added to cart 🛒");
 
-               window.dispatchEvent(new Event("cart Updated"));
+               window.dispatchEvent(new Event("cartUpdated"));
                 
         } catch (err) {
             console.log(err);
@@ -85,46 +85,46 @@ function ProductDetails({refreshCart}){
         };
     
 
-        const handleBuyNow = async () => {
-            if(!product) return;
-            if(product.stock === 0) {
+    //     const handleBuyNow = async () => {
+    //         if(!product) return;
+    //         if(product.stock === 0) {
 
-                //  toast.warning(" out of stock ❌");
-                return;
-            }
+    //             //  toast.warning(" out of stock ❌");
+    //             return;
+    //         }
             
 
-             setCartLoading(true);
-             try {
+    //          setCartLoading(true);
+    //          try {
 
                 
             
               
            
-                  await addToCart(product.id, 1)
+    //               await addToCart(product.id, 1)
                   
 
-                  window.dispatchEvent(new Event("cartUpdated"));
+    //               window.dispatchEvent(new Event("cartUpdated"));
 
            
           
-                 navigate("/checkout");
-            } catch (err) {
-                console.log(err);
+    //              navigate("/checkout");
+    //         } catch (err) {
+    //             console.log(err);
                 
-                if(err.response?.status === 401) {
-                    // toast.warning("Login first");
-                    navigate("/login");
-                } else {
+    //             if(err.response?.status === 401) {
+    //                 // toast.warning("Login first");
+    //                 navigate("/login");
+    //             } else {
              
-                //   toast.error("Error ❌");
-                }
+    //             //   toast.error("Error ❌");
+    //             }
 
-            } finally{
-                setCartLoading(false);
-          }
+    //         } finally{
+    //             setCartLoading(false);
+    //       }
         
-        };
+    //     };
 
 
 
@@ -137,6 +137,31 @@ function ProductDetails({refreshCart}){
     }
 
     console.log(product);
+
+
+    const handleBuyNow = () => {
+
+    if (!product) return;
+
+    if (product.stock === 0) {
+        return;
+    }
+
+    navigate("/checkout", {
+        state: {
+            buyNow: true,
+            product: {
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                image: product.image,
+                stock: product.stock,
+            },
+            quantity: 1,
+        },
+    });
+
+};
 
     return(
         <div style={{padding:"20px"}}>
@@ -172,7 +197,19 @@ function ProductDetails({refreshCart}){
                    </p>
                   ):(
                     <>
-
+                                                                <p
+                            style={{
+                                color: product.stock <= 5 ? "#ff8c00" : "green",
+                                fontWeight: "700",
+                                fontSize: "16px",
+                                marginTop: "8px",
+                                marginBottom: "12px"
+                            }}
+                        >
+                            {product.stock > 0
+                                ? `Only ${product.stock} left in stock ⚠️`
+                                : "Out of Stock"}
+                        </p>
                      <button 
                        
                         onClick={handleAddToCart} disabled={cartLoading}

@@ -13,8 +13,18 @@ from .views import( LoginView,ProductListAPIView,ProductDetailAPIView, MyOrdersA
                     OrderCreateAPIView,AdminOrdersAPIView,CreatePaymentOrderAPIView,RequestReturnAPIView, csrf)
 
 
+from .views import celery_test
+
+
+
 urlpatterns = [
+
+    path("celery-test/", celery_test),
     path("cart/add/<int:product_id>/", AddToCartAPIView.as_view(), name="add-to-cart"),
+
+   
+
+
     path("cart/remove/<int:item_id>/", RemoveFromCartAPIView.as_view()),
     path("products/",ProductListAPIView.as_view(), name="product-list"),
     path("products/<int:pk>/",ProductDetailAPIView.as_view(), name="product-detail"),
@@ -48,4 +58,5 @@ urlpatterns = [
     path('cart/decrease/<int:product_id>/',DecreaseCartItemAPI.as_view()),
     path('cart/',CartDetailAPIView.as_view()),
     path("csrf/", csrf),
+    path("order/<int:order_id>/refund-details/",RefundDetailsAPIView.as_view()),
 ]

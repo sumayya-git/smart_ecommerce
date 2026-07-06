@@ -73,6 +73,8 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
 
+    'store.api.csrf_trace_middleware.CSRFTraceMiddleware',
+
     'django.middleware.csrf.CsrfViewMiddleware',
 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -115,13 +117,14 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-SESSION_COOKIE_SAMESITE = "None"
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SAMESITE = "None"
-
+SESSION_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SAMESITE = "Lax"
 SESSION_COOKIE_HTTPONLY = True
 CSRF_COOKIE_HTTPONLY = False
-CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_SECURE = False
+
+CSRF_FAILURE_VIEW = "store.api.views.csrf_failure"
 
 CSRF_COOKIE_NAME = "csrftoken"
 # CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
@@ -140,16 +143,27 @@ SESSION_ENGINE = "django.contrib.sessions.backends.db"
 
 CACHE_MIDDLEWARE_SECONDS = 0
 
-SESSION_COOKIE_AGE = 3600
+
+
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
 SESSION_SAVE_EVERY_REQUEST = True
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES':[
-        'rest_framework.authentication.SessionAuthentication',
+
+    "DEFAULT_AUTHENTICATION_CLASSES": [
+        "rest_framework.authentication.SessionAuthentication",
     ],
-    
+
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.OrderingFilter",
+    ],
+
+    "DEFAULT_PAGINATION_CLASS":
+        "rest_framework.pagination.PageNumberPagination",
+
+    "PAGE_SIZE": 5,
 }
 
 
@@ -241,6 +255,10 @@ STATICFILES_DIRS = [
     BASE_DIR/ 'store'/'templates'/ 'store'/ 'static',
 ]
 
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 
 # Default primary key field type
@@ -255,7 +273,7 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
-EMAIL_HOST_PASSWORD = os.getenv("EMAil_HOST_PASSWORD")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 
 MEDIA_URL ='/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
@@ -277,65 +295,110 @@ RATELIMIT_USE_CACHE = 'default'
 RATELIMIT_VIEW = 'store.views.ratelimit_error'
 
 
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+
+    "formatters": {
+        "standard": {
+            "format": "[{asctime}] {levelname} {message}",
+            "style": "{",
+        },
+    },
+
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "standard",
+        },
+
+        "file": {
+            "class": "logging.FileHandler",
+            "filename": os.path.join(BASE_DIR, "store.log"),
+            "formatter": "standard",
+        },
+    },
+
+    "loggers": {
+        "store": {
+            "handlers": ["console", "file"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
+
+
+
+# Celery Configuration
+CELERY_BROKER_URL = "redis://redis:6379/0"
+CELERY_RESULT_BACKEND = "redis://redis:6379/0"
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "Asia/Kolkata"
+
+
 #==================================================================================================
 # PRODUCTION SECURITY SETTINGS
 # =================================================================================================
 
 
-DEBUG = True
+# DEBUG = True
 
-ALLOWED_HOSTS = [
-    "smart-ecommerce-backend.onrender.com",
-    "smart-ecommerce-web.onrender.com",
-    "localhost",
-    "127.0.0.1"
-]
-
-
-SECURE_SSL_REDIRECT = False
+# ALLOWED_HOSTS = [
+#     "smart-ecommerce-backend.onrender.com",
+#     "smart-ecommerce-web.onrender.com",
+#     "localhost",
+#     "127.0.0.1"
+# ]
 
 
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = "DENY"
-
-SECURE_HSTS_SECONDS = 31536000
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-SECURE_HSTS_PRELOAD = True
+# SECURE_SSL_REDIRECT = False
 
 
-SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+# SECURE_BROWSER_XSS_FILTER = True
+# SECURE_CONTENT_TYPE_NOSNIFF = True
+# X_FRAME_OPTIONS = "DENY"
 
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
-
-SESSION_COOKIE_HTTPONLY = True
-CSRF_COOKIE_HTTPONLY = False
-
-SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-        },
-    },
-    "loggers": {
-        "django.security.csrf":{
-            "handlers": ["console"],
-            "level":"DEBUG",
-            "propagate": False,
-        },
-    },
-
-}
+# SECURE_HSTS_SECONDS = 31536000
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+# SECURE_HSTS_PRELOAD = True
 
 
-CSRF_FAILURE_VIEW = "store.api.views.csrf_failure"
+# SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
+# STATIC_URL = "/static/"
+# STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+# MEDIA_URL = "/media/"
+# MEDIA_ROOT = BASE_DIR / "media"
+
+# SESSION_COOKIE_HTTPONLY = True
+# CSRF_COOKIE_HTTPONLY = False
+
+# SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "console": {
+#             "class": "logging.StreamHandler",
+#         },
+#     },
+#     "loggers": {
+#         "django.security.csrf":{
+#             "handlers": ["console"],
+#             "level":"DEBUG",
+#             "propagate": False,
+#         },
+#     },
+
+# }
+
+
+# CSRF_FAILURE_VIEW = "store.api.views.csrf_failure"

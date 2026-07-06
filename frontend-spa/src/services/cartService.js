@@ -29,10 +29,15 @@ export const addToCart = async (productId, quantity) => {
 
     console.log("ADD TO CART FUNCTION CALLED");
 
+    console.log("document.cookie =", document.cookie);
+    console.log("xsrfCookieName =", API.defaults.xsrfCookieName);
+    console.log("xsrfHeaderName =", API.defaults.xsrfHeaderName);
+    console.log("withCredentials =", API.defaults.withCredentials);
+
     // const csrftoken = document.cookie
     //     .split(';')
     //     .find(row => row.startsWith('csrftoken='))
-    //     ?.split('=')[1];
+    //     ?.split("="")[1];
     // console.log("TOKEN =", csrftoken);
 
     // console.log("COOKIE =", document.cookie);

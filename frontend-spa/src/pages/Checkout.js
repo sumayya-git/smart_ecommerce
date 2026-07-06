@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { fetchCart } from "../services/cartService"
 
 import { createOrder } from "../services/orderService"
@@ -11,7 +11,7 @@ import OrderSummary from "../components/OrderSummary";
 
 import AddressForm from "../components/AddressForm";
 
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 
 function Checkout(){
@@ -20,47 +20,89 @@ function Checkout(){
 
     const [address, setAddress] = useState("")
     const navigate = useNavigate();
+    const location = useLocation();
 
     const [cart,setCart] = useState([])
 
+    const buyNowData = location.state;
+
+
+    // useEffect(() => {
+
+
+    //     const loadCart = async () => {
+    //      try{
+            
+
+    //         const cartRes = await fetchCart()
+
+
+    //         const cartItems = cartRes.data.data.items || []
+
+    //         console.log("CHECKOUT CART:", cartItems)
+
+
+    //         setCart(cartItems)
+
+    //     }catch(err){
+    //         console.log(err)
+    //     }
+    // }
+
+               
+               
+
+    //         loadCart()
+            
+            
+            
+            
+    //     },[])
 
     useEffect(() => {
 
+    if (buyNowData?.buyNow) {
 
-        const loadCart = async () => {
-         try{
-            
+        setCart([
+            {
+                product: buyNowData.product,
+                quantity: buyNowData.quantity
+            }
+        ]);
 
-            const cartRes = await fetchCart()
-
-
-            const cartItems = cartRes.data.data.items || []
-
-            console.log("CHECKOUT CART:", cartItems)
-
-
-            setCart(cartItems)
-
-        }catch(err){
-            console.log(err)
-        }
+        return;
     }
 
-               
-               
+    const loadCart = async () => {
 
-            loadCart()
-            
-            
-            
-            
-        },[])
+        try {
 
+            const cartRes = await fetchCart();
+
+            const cartItems = cartRes.data.data.items || [];
+
+            console.log("CHECKOUT CART:", cartItems);
+
+            setCart(cartItems);
+
+        } catch (err) {
+
+            console.log(err);
+
+        }
+
+    };
+
+    loadCart();
+
+}, [buyNowData]);
 
 
     const totalAmount = cart.reduce((total, item) =>  
-                total + ((item.product?.price || item.product_price || 0) * item.quantity),0)
+                total + ((item.product?.price || item.product_price || 0) * item.quantity),0);
 
+
+    const isBuyNow = buyNowData?.buyNow === true;
    
 
 
@@ -79,7 +121,7 @@ function Checkout(){
          
 
             if(cart.length === 0){
-                toast.info("Cart is empty");
+                // toast.info("Cart is empty");
 
                 return;
             }
@@ -95,10 +137,31 @@ function Checkout(){
                 
 
                                  
-                        const finalItems = cart.map(item => ({
-                                product_id:item.product?.id || item.product_id || item.id,
+                        // const finalItems = cart.map(item => ({
+                        //         product_id:item.product?.id || item.product_id || item.id,
+                        //         quantity: item.quantity,
+                        //     }));
+
+
+                                                let finalItems;
+
+                        if (isBuyNow) {
+
+                            finalItems = [
+                                {
+                                    product_id: buyNowData.product.id,
+                                    quantity: buyNowData.quantity,
+                                }
+                            ];
+
+                        } else {
+
+                            finalItems = cart.map(item => ({
+                                product_id: item.product?.id || item.product_id || item.id,
                                 quantity: item.quantity,
                             }));
+
+                        }
 
                          
                          const res = await createOrder({
@@ -120,7 +183,7 @@ function Checkout(){
                
                    
             
-                                toast.success("Order placed successfully");
+                                // toast.success("Order placed successfully");
 
                                 window.dispatchEvent(new Event("cartUpdated"));
 
@@ -146,10 +209,10 @@ function Checkout(){
             }catch(err){
                 console.log("ERROR:",err.response?.data || err);
                 if (err.response?.status === 401 || err.response?.status === 403) {
-                    toast.warning("Please login first ❌");
+                    // toast.warning("Please login first ❌");
                     navigate("/login");
             }
-                toast.error(err.response?.data?.error || "Something went wrong")
+                // toast.error(err.response?.data?.error || "Something went wrong")
         }
         };
         
@@ -158,10 +221,10 @@ function Checkout(){
     return(
         <div style={{padding:"20px"}}>
 
-            Checkout working
+           
             
 
-           {/* <PaymentMethod paymentMethod={paymentMethod}
+           <PaymentMethod paymentMethod={paymentMethod}
                         setPaymentMethod={setPaymentMethod}
                         />
 
@@ -170,7 +233,7 @@ function Checkout(){
 
 
             <OrderSummary totalAmount={totalAmount}
-                placeOrder={placeOrder}/> */}
+                placeOrder={placeOrder}/>
 
 
 

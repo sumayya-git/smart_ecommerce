@@ -12,6 +12,13 @@ function CategoryProducts() {
   const [loading, setLoading] = useState(true)
   const [categoryName, setCategoryName] = useState("");
 
+  
+
+  const [next, setNext] = useState(null);
+  const [previous, setPrevious] = useState(null);
+
+
+
   const navigate = useNavigate();
 
   const fetchCategoryName = async () => {
@@ -31,39 +38,35 @@ function CategoryProducts() {
     
     
    
+   const fetchProducts = async (
+    url = `/products/?category=${category}`
+) => {
+
+    setLoading(true);
+
+    try {
+
+        const res = await API.get(url);
+
+        setProducts(res.data.results);
+        setNext(res.data.next);
+        setPrevious(res.data.previous);
+
+    } catch (err) {
+
+        console.log("Error fetching products:", err);
+
+    }
+
+    setLoading(false);
+};
+
     useEffect(() => {
-      const fetchProducts = async () => {
-      setLoading(true)
 
-        try {
-          const res = await API.get("/products/");
+    fetchProducts();
+    fetchCategoryName();
 
-          
-       
-        
-          const filtered = res.data.filter(
-            (item) => Number(item.category) === Number(category) 
-          );
-          setProducts(filtered);
-
-          setLoading(false)
-
-         
-         
-
-        
-      
-
-        } catch (err) {
-          console.log("Error fetching products:", err);
-
-          setLoading(false)
-        }
-      };
-
-      fetchProducts();
-      fetchCategoryName();
-    }, [category]);
+}, [category]);
          
       
 
@@ -194,7 +197,32 @@ function CategoryProducts() {
 
             </div>
               )}
+                  <div
+              style={{
+                  marginTop: "20px",
+                  display: "flex",
+                  justifyContent: "center",
+                  gap: "10px",
+              }}
+          >
+              <button
+                  disabled={!previous}
+                  onClick={() => fetchProducts(previous)}
+              >
+                  Previous
+              </button>
+
+              <button
+                  disabled={!next}
+                  onClick={() => fetchProducts(next)}
+              >
+                  Next
+              </button>
+          </div>
+              
         </div>
+
+        
     );
 }
 

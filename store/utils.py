@@ -5,6 +5,9 @@ from xhtml2pdf import pisa
 from io import BytesIO
 from .models import Order
 from django.shortcuts import get_object_or_404
+from django.contrib.staticfiles import finders
+
+
 
 def send_invoice_email(order_id):
 
@@ -16,9 +19,13 @@ def send_invoice_email(order_id):
     for item in items:
         subtotal += float(item.price) * item.quantity
 
-        cgst = subtotal * 0.09
-        sgst = subtotal * 0.09
-        grand_total = subtotal + cgst + sgst
+    cgst = subtotal * 0.09
+    sgst = subtotal * 0.09
+    grand_total = subtotal + cgst + sgst
+
+    logo_path = finders.find("logo.png")
+
+    print("Logo Path =", logo_path)
     
    
    
@@ -29,7 +36,7 @@ def send_invoice_email(order_id):
         "cgst": cgst,
         "sgst": sgst,
         "grand_total": grand_total,
-        "logo_path":"templates/store/static/logo.png"
+        "logo_path": logo_path,
     })
 
     pdf_file = BytesIO()

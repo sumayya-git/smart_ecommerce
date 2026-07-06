@@ -28,28 +28,7 @@ import OrderSummary from "./components/OrderSummary";
 
 function App() {
 
-  console.log("Register =", Register);
-  console.log("Login =", Login);
-  console.log("AdminDashboard =", AdminDashboard);
-  // // console.log(ToastContainer);
-  console.log("Navbar =", Navbar);
-  console.log("AdminRoute =", AdminRoute);
-  console.log("PrivateRoute =", PrivateRoute);
-  console.log("EditProfile -", EditProfile);
-  console.log("Checkout =", Checkout);
-  console.log("CategoryProducts =",CategoryProducts);
-  console.log("ProductDetails =",ProductDetails);
-  console.log("CategoryHome =", CategoryHome);
-  console.log("AddressForm =", AddressForm);
-  console.log("OrderSummary =", OrderSummary)
-  console.log("Orders =", Orders);
-  console.log("Cart =", Cart);
-
-  // // console.log("Login",Login);
-  // console.log("Router",Router);
-  // console.log("Routes",Routes);
-  // console.log("Route",Route);
-
+  
 
 
   const [cartCount, setCartCount] = useState(0);
@@ -62,9 +41,9 @@ function App() {
   
   const fetchCartCount = async () => {
     try{
-      const res = await API.get("/cart/",{
-      withCredentials: true,
-    });
+      const res = await API.get("/cart/");
+     
+    
 
       const totalQty = res.data.data.items.reduce( (sum, item) => sum + item.quantity, 0);
     
@@ -73,18 +52,15 @@ function App() {
     
 
   } catch (err){
-    console.log("Cart fetch skipped (not logged in)");
+   
   }
 };
 
 useEffect(() => {
-  const isLoggedIn = document.cookie.includes("sessionid");
-
-  if(isLoggedIn) {
-
+  
   
   fetchCartCount();
-  }
+  
 },[]);
 
 useEffect(() => {

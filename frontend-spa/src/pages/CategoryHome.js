@@ -18,7 +18,11 @@ function CategoryHome() {
       const fetchCategories = async () => {
         try{
           const res = await API.get("categories/");
+
+          
           setCategories(res.data);
+
+          console.log(res.data);
        
         } catch (err) {
 
@@ -75,44 +79,49 @@ function CategoryHome() {
 
                         {categories
                           .filter(sub => sub.parent === parent.id)
-                           .map(sub => (
+                           .map(sub => {
+                              console.log(sub.image);
+                              return(
                             
-                            <div key={sub.id}
-                                onClick={() => navigate(`/category/${sub.id}`)}
+                                <div key={sub.id}
+                                    onClick={() => navigate(`/category/${sub.id}`)}
 
-                                 style={{ cursor:"pointer", textAlign:"center" }}
-                                 >
-                                  <img src={sub.image}
-                                    alt={sub.name}
-                                  style={{
-                                    width:"100%",
-                                    height:"100px",
-                                    objectFit:"cover",
-                                    
-                                    borderRadius:"5px",
-                                  
-                                  }}
-                                  />
-                                  
-                                    
+                                    style={{ cursor:"pointer", textAlign:"center" }}
+                                    >
+
+                                     
+                                      <img src={sub.image}
+                                        alt={sub.name}
+                                       style={{
+                                        width:"100%",
+                                        height:"100px",
+                                        objectFit:"cover",
+                                        
+                                        borderRadius:"5px",
                                       
-                                        <p>{sub.name}</p>
-                                        </div>
-                           ))}
-                           </div>
-                           </div>
-                           
+                                      }}
+                                      />
+                                      
+                                        
+                                          
+                                            <p>{sub.name}</p>
+                                            </div>
+                              );
+                            })}
+                              </div>
+                              </div>
+                              
 
-                          ))}
+                              ))}
 
-                          </div>
-                          </div>
+                              </div>
+                              </div>
 
-                                  
-                
-                
-    );
-}
+                                      
+                    
+                    
+        );
+    }
 
                     
            

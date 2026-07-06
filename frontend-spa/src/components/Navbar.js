@@ -156,7 +156,23 @@ function Navbar({ cartCount, refreshCart }) {
         }}>
 
             {/*Logo*/}
-            <div>
+
+                        <div
+                onClick={() => navigate("/")}
+                style={{ cursor: "pointer" }}
+            >
+                <h2 style={{ color:"#febd69", margin: 0 }}>SmartShop</h2>
+                <div
+                    style={{
+                        height:"4px",
+                        width:"80px",
+                        backgroundColor:"#febd69",
+                        borderRadius:"50%",
+                        marginTop:"2px"
+                    }}
+                ></div>
+            </div>
+            {/* <div>
             <h2 style={{ color:"#febd69", margin: 0 }}>SmartShop</h2>
             <div style={{
               height:"4px",
@@ -165,7 +181,7 @@ function Navbar({ cartCount, refreshCart }) {
               borderRadius:"50%",
               marginTop:"2px"
             }}></div>
-            </div>
+            </div> */}
 
             {/*Search */}
              <div style={{ display: "flex", width:"50%"}}>
@@ -311,13 +327,31 @@ function Navbar({ cartCount, refreshCart }) {
                          padding: "10px 20px",
                          
                  }}>
-                  <p style={{ cursor:"pointer"}}>
-                        All
+                                    <p
+                      style={{ cursor:"pointer" }}
+                      onClick={() => navigate("/")}
+                  >
+                      All
                   </p>
                   <p>Today's Deals</p>
-                  <p>Mobiles</p>
-                  <p>Laptops</p>
-                  <p>Accessories</p>
+                                    <p
+                      style={{ cursor:"pointer" }}
+                      onClick={() => navigate("/category/1")}
+                  >
+                      Mobiles
+                  </p>
+                                    <p
+                      style={{ cursor:"pointer" }}
+                      onClick={() => navigate("/category/3")}
+                  >
+                      Laptops
+                  </p>
+                                  <p
+                      style={{ cursor:"pointer" }}
+                      onClick={() => navigate("/category/4")}
+                  >
+                      Accessories
+                  </p>
                   </div>
                   
                   </>

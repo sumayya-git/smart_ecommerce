@@ -2,12 +2,22 @@ from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from store.models import  Cart, CartItem, Product, Order, OrderItem, Category
 
-class CategorySerializer(serializers.ModelSerializer):
-   subcategories =serializers.StringRelatedField(many=True)
+from rest_framework import serializers
+from store.models import Category
 
-   class Meta:
+class CategorySerializer(serializers.ModelSerializer):
+    subcategories = serializers.StringRelatedField(many=True)
+    image = serializers.SerializerMethodField()
+
+    class Meta:
         model = Category
-        fields = '__all__'
+        fields = "__all__"
+
+    def get_image(self, obj):
+        request = self.context.get("request")
+        if obj.image:
+            return request.build_absolute_uri(obj.image.url)
+        return None
 
 class ProductSerializer(serializers.ModelSerializer):
     image = serializers.ImageField(use_url=True)

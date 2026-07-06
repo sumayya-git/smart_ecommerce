@@ -79,8 +79,7 @@ class Order(models.Model):
     total_amount = models.DecimalField(max_digits=10,decimal_places=2)
     status = models.CharField(max_length=20, choices= STATUS_CHOICES, default="PLACED")
    
-    cancel_reason = models.TextField(blank=True, null=True)
-    cancelled_at = models.DateTimeField(blank=True, null=True)
+    
 
     
 
@@ -150,7 +149,32 @@ class Order(models.Model):
     phone = models.CharField(max_length=15, blank=True, null=True)
 
     invoice_sent = models.BooleanField(default=False)
-    
+
+        # Refund Details (For COD Orders)
+    refund_account_name = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+
+    refund_account_number = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True
+    )
+
+    refund_ifsc = models.CharField(
+        max_length=20,
+        blank=True,
+        null=True
+    )
+
+    refund_upi_id = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True
+    )
+        
 
     def __str__(self):
         return f"Order #{self.id}"

@@ -5,6 +5,27 @@ import jwt
 from django.conf import settings
 from rest_framework_simplejwt.tokens import AccessToken
 
+# from rest_framework.authentication import SessionAuthentication
+# from django.middleware.csrf import CSRFCheck
+# from rest_framework.exceptions import PermissionDenied
+
+
+# class DebugSessionAuthentication(SessionAuthentication):
+#     def enforce_csrf(self, request):
+#         check = CSRFCheck(lambda req: None)
+#         check.process_request(request)
+#         reason = check.process_view(request, None, (), {})
+
+#         print("=" * 60)
+#         print("DRF CSRF DEBUG")
+#         print("COOKIE:", request.COOKIES.get("csrftoken"))
+#         print("HEADER:", request.META.get("HTTP_X_CSRFTOKEN"))
+#         print("REASON:", reason)
+#         print("=" * 60)
+
+#         if reason:
+#             raise PermissionDenied(reason)
+
 
 
 

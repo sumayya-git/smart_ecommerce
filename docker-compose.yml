@@ -1,0 +1,42 @@
+services:
+  backend:
+    build: .
+    container_name: ecommerce_backend
+    volumes:
+      - .:/app
+      - media_volume:/app/media
+      - static_volume:/app/staticfiles
+    expose:
+      - "8000"
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:7-alpine
+    container_name: ecommerce_redis
+    expose:
+      - "6379"
+
+  celery:
+    build: .
+    container_name: ecommerce_celery
+    command: celery -A ecommerce_project worker --loglevel=info
+    volumes:
+      - .:/app
+    depends_on:
+      - backend
+      - redis
+
+  frontend:
+    build: ./frontend-spa
+    container_name: ecommerce_frontend
+
+    ports:
+      - "80:80"
+
+    depends_on:
+      - backend
+
+volumes:
+    media_volume:
+    static_volume:

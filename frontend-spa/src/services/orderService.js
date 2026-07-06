@@ -15,16 +15,17 @@ export const getMyOrders = async () => {
 }
 
 export const cancelOrderService = async (orderId) => {
-    return await API.post(`/orders/${orderId}/cancel`)
+    return await API.post(`/order/cancel/${orderId}/`);
 }
 
 
 export const requestReturnService = async (orderId) => {
-    return await API.post(`/orders/${orderId}/return`)
+    console.log("SERVICE orderId =", orderId);
+    return await API.post(`/order/${orderId}/return/`)
 }
 
 export const downloadInvoiceService = async (orderId) => {
-    return await API.get(`/orders/${orderId}/invoice`,{
+    return await API.get(`/order/${orderId}/invoice/`,{
         responseType:"blob"
     })
 }

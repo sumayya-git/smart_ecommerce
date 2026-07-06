@@ -135,7 +135,7 @@ function Cart() {
 
       loadCart();
 
-      toast.info("Item removed from cart");
+      // toast.info("Item removed from cart");
 
 
       window.dispatchEvent(new Event("cartUpdated"));

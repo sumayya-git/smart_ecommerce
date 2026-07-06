@@ -5,8 +5,8 @@ from django.conf import settings
 from rest_framework.views import APIView
 from rest_framework import generics 
 from rest_framework.generics import ListAPIView, RetrieveAPIView
-from rest_framework.filters import SearchFilter
-# from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter, OrderingFilter
+from django_filters.rest_framework import DjangoFilterBackend
 from .serializers import ProductSerializer
 from store.models import  Product
 from rest_framework.response import Response
@@ -72,6 +72,21 @@ from django_ratelimit.decorators import ratelimit # fixed
 from django.utils.decorators import method_decorator
 from django.middleware.csrf import get_token
 
+from .logging import log_info, log_warning, log_error
+
+
+from django.http import JsonResponse
+from .tasks import test_task
+
+from .tasks import send_order_email, send_invoice_email_task
+
+
+
+
+def celery_test(request):
+    test_task.delay()
+    return JsonResponse({"message": "Task sent to Celery"})
+
 
 
 def csrf_failure(request, reason=""):
@@ -115,7 +130,13 @@ def csrf(request):
 
 @method_decorator(ratelimit(key='ip', rate='5/m', method='POST', block=True), name='post')
 class LoginView(APIView):
-   def post(self, request):
+   
+    permission_classes = [AllowAny]
+
+    
+    def post(self, request):
+        
+        print("LOGIN VIEW ENTERED")
     
         username = request.data.get("username")
         password = request.data.get("password")
@@ -125,6 +146,10 @@ class LoginView(APIView):
         if user is not None:
            print("BEFORE LOGIN TOKEN:", get_token(request))
            login(request, user)
+
+          
+
+           log_info(f"User {user.username} logged in.")
            print("AFTER LOGIN TOKEN:",get_token(request))
 
           
@@ -140,6 +165,8 @@ class LoginView(APIView):
         
            
           
+        log_warning(f"Failed login attempt: {username}")
+
 
             
         
@@ -151,8 +178,8 @@ class LoginView(APIView):
     
 @method_decorator(csrf_exempt, name='dispatch')
 class LogoutView(APIView):
-    authentication_classes = []
-    permission_classes = []
+   
+    permission_classes = [IsAuthenticated]
 
     def post(self,request):
         print("LOGOUT VIEW HIT")
@@ -170,11 +197,14 @@ class LogoutView(APIView):
 
 
 
-@api_view(['GET'])
-
+@api_view(["GET"])
 def get_categories(request):
     categories = Category.objects.all()
-    serializer = CategorySerializer(categories, many=True)
+    serializer = CategorySerializer(
+        categories,
+        many=True,
+        context={"request": request}
+    )
     return Response(serializer.data)
 
 @api_view(['GET'])
@@ -243,8 +273,15 @@ def register(request):
 class ProductListAPIView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    filter_backends = [SearchFilter]
+    permission_classes = [AllowAny]
+    filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
     search_fields = ['name','category__name']
+
+    filterset_fields = ['category', 'price', 'stock', 'rating']
+
+    ordering_fields = ['price', 'rating', 'stock', 'created_at']
+
+    ordering = ['id']
     
 
 class OrderInvoiceAPI(APIView):
@@ -258,11 +295,23 @@ class OrderInvoiceAPI(APIView):
 
         print("DEBUG PAYMENT STATUS",order.payment_status)
 
-        if str(order.payment_status).strip().lower() !="paid":
-            return Response(
-                {"error": f"Payment status is{order.payment_status}.Invoice  only for PAID"},
-                status=400
-            )
+                # ONLINE → Paid required
+        if order.payment_method == "ONLINE":
+
+            if order.payment_status != "PAID":
+                return Response(
+                    {"error": "Invoice available only after successful payment."},
+                    status=400,
+                )
+
+        # COD → Delivered required
+        elif order.payment_method == "COD":
+
+            if order.status != "DELIVERED":
+                return Response(
+                    {"error": "Invoice available only after delivery."},
+                    status=400,
+                )
 
         buffer = io.BytesIO()
         doc = SimpleDocTemplate(buffer, pagesize=A4)
@@ -504,12 +553,8 @@ class AdminRefundAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def post(self,request, order_id):
-      if not request.user.is_staff:
-         return Response({"error": "Admin only"}, status=400)
-      try:
-           order = Order.objects.get(id=order_id)
-      except Order.DoesNotExist:
-           return Response({"error": "Order not found"},status=404)
+      
+      order = get_object_or_404(Order, id=order_id)
       action = request.data.get("action")
 
       if order.refund_status !="REQUESTED":
@@ -622,11 +667,18 @@ class OrderCreateAPIView(APIView):
                         # try:
 
                         product = Product.objects.get(id=product_id)
-                        # except Exception as e:
-                            
-                        #     return Response({"error": str(e)}, status=400)
 
                         qty = int(item.get("quantity", 1))
+
+                        # Check stock before placing order
+                        if product.stock < qty:
+                            return Response(
+                                {
+                                    "error": f"{product.name} has only {product.stock} items left"
+                                },
+                                status=400
+                            )
+
                         price = product.price * qty
 
                         OrderItem.objects.create(
@@ -636,14 +688,20 @@ class OrderCreateAPIView(APIView):
                             price=price
                         )
 
-                        
-                    
-                
+                        # Reduce stock
+                        product.stock -= qty
+                        product.save()
+
                         total += price
 
                     order.total_amount = total
 
                     order.save()
+
+                    log_info(f"Order {order.id} created by {request.user.username}")
+
+                    send_order_email.delay(order.user.email, order.id)
+                    # send_invoice_email_task.delay(order.id)
 
                     
 
@@ -678,8 +736,13 @@ class OrderCreateAPIView(APIView):
                       data={"order_id": order.id},
                       status_code=201)
         except Exception as e:
-            print("ORDER ERROR =", str(e))
+            
 
+            log_error(str(e))
+
+            return Response({
+                "error": str(e)
+            }, status=500)
             return Response({
                 "error": str(e)
             }, status=500)
@@ -765,7 +828,7 @@ class CreatePaymentOrderAPIView(APIView):
       except Exception as e:
           
           import traceback
-          print(traceback.format_exc())
+          log_error(traceback.format_exc())
           
           return Response({"error": str(e)}, status=400)
 
@@ -843,6 +906,8 @@ class VerifyPaymentAPIView(APIView):
 
             order.total_amount = total
             order.save()
+
+            log_info(f"Payment successful for Order {order.id}")
 
 
       
@@ -958,10 +1023,6 @@ class RemoveFromCartAPIView(APIView):
         return success_response(message="Item removed from  cart")
     
 
-class ProductListAPIView(ListAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-    permission_classes = [AllowAny]
 
 
 class ProductDetailAPIView(RetrieveAPIView):
@@ -1002,6 +1063,7 @@ class MyOrdersAPIView(APIView):
                 "packed_at": order.packed_at,
                 "shipped_at":order.shipped_at,
                 "delivered_at":order.delivered_at,
+                "cancelled_at": order.cancelled_at,
                 "refund_status":order.refund_status,
                 "return_status":order.return_status,
                 "items":items
@@ -1030,6 +1092,7 @@ class CancelOrderAPIView(APIView):
         
        
         order.status = "CANCELLED"
+        order.cancelled_at = timezone.now()
 
         for item in order.items.all():
             product = item.product
@@ -1044,6 +1107,8 @@ class CancelOrderAPIView(APIView):
         
         order.cancel_reason = request.data.get("reason","")
         order.save()
+
+        log_info(f"Order {order.id} cancelled by {request.user.username}")
         
 
         return success_response(message= "Order Cancelled successfully")
@@ -1056,25 +1121,28 @@ class UpdateOrderStatusAPIView(APIView):
     permission_classes = [IsAdminUser]
 
     def post(self, request, order_id):
-        try:
-            order = Order.objects.get(id=order_id)
-        except Order.DoesNotExist:
-             return Response({"error": "Order not found"},status=404)
-        
+       order = get_object_or_404(Order, id=order_id)
 
 
-        new_status = request.data.get("status")
+       new_status = request.data.get("status")
 
-        allowed_status = ["PROCESSING", "SHIPPED", "DELIVERED"]
+       allowed_status = ["PROCESSING", "SHIPPED", "DELIVERED"]
 
-        if new_status not in ["SHIPPED", "DELIVERED"]:
-            return Response({"error": "Invalid status"}, status=400)
-        order.status = new_status
-        order.save()
+       if new_status not in allowed_status:
+          return Response({"error": "Invalid status"}, status=400)
+       order.status = new_status
+       order.save()
+
+      
+
+       if new_status == "DELIVERED":
+            send_invoice_email_task.delay(order.id)
+
+
        
         
            
-        return success_response(
+       return success_response(
                 message=f"Order updated to {new_status}"
                 
         )
@@ -1153,14 +1221,9 @@ class AdminOrderDetailAPIView(APIView):
     permission_classes = [IsAuthenticated, IsAdminUser]
 
     def get(self, request, order_id):
-      if not request.user.is_staff:
-        
-        return Response({"error": "Not Authorized"},status=400)
+     
       
-      try:
-            order = Order.objects.get(id=order_id)
-      except Order.DoesNotExist:
-             return Response({"error": "Order not found"},status=404)
+      order = get_object_or_404(Order, id=order_id)
       
       serializer = OrderSerializer(order)
             
@@ -1242,9 +1305,10 @@ def pay_order(request, order_id):
 
 
 class RequestReturnAPIView(APIView):
-    permission_classes([IsAuthenticated])
+    permission_classes = [IsAuthenticated]
 
     def post(self,request,order_id):
+        print("RETURN API HIT")
 
         order = get_object_or_404(Order,id=order_id, user=request.user)
 
@@ -1259,6 +1323,38 @@ class RequestReturnAPIView(APIView):
         
         
         return success_response(message= "Return requested successfully")
+    
+
+
+class RefundDetailsAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, order_id):
+
+        order = get_object_or_404(
+            Order,
+            id=order_id,
+            user=request.user
+        )
+
+        if order.payment_method != "COD":
+            return Response(
+                {"error": "Refund details required only for COD orders"},
+                status=400
+            )
+
+        order.refund_account_name = request.data.get("account_name")
+        order.refund_account_number = request.data.get("account_number")
+        order.refund_ifsc = request.data.get("ifsc")
+        order.refund_upi_id = request.data.get("upi_id")
+
+        
+        order.save()
+
+        return success_response(
+            message="Refund details saved successfully"
+        )
+
     
 
 from django.http import JsonResponse
