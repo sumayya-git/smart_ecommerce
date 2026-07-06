@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: smart-ecommerce
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+
+  - type: worker
+    name: smart-ecommerce-celery
+    env: docker
+    dockerfilePath: ./Dockerfile
+    dockerCommand: celery -A ecommerce_project worker --loglevel=info
+    plan: free
+
+  - type: redis
+    name: smart-ecommerce-redis
+    plan: free
