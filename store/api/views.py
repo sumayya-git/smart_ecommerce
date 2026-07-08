@@ -746,7 +746,7 @@ class OrderCreateAPIView(APIView):
 
                     log_info(f"Order {order.id} created by {request.user.username}")
 
-                    # send_order_email.delay(order.user.email, order.id)
+                    send_order_email.delay(order.user.email, order.id)
                     # send_invoice_email_task.delay(order.id)
 
                     
@@ -1156,6 +1156,9 @@ class CancelOrderAPIView(APIView):
         order.cancel_reason = request.data.get("reason","")
         order.save()
 
+        cache.delete("orders")
+        cache.delete("products")
+
         log_info(f"Order {order.id} cancelled by {request.user.username}")
         
 
@@ -1180,6 +1183,8 @@ class UpdateOrderStatusAPIView(APIView):
           return Response({"error": "Invalid status"}, status=400)
        order.status = new_status
        order.save()
+
+       cache.delete("orders")
 
       
 
