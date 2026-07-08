@@ -207,7 +207,9 @@ class LogoutView(APIView):
 
 
 # @cache_page(60 * 5)
-# @api_view(["GET"])
+@api_view(["GET"])
+@permission_classes([AllowAny])
+
 def get_categories(request):
     categories = Category.objects.all()
     serializer = CategorySerializer(
