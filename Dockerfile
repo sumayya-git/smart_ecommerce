@@ -1,4 +1,6 @@
-# ---------- React Build ----------
+# ===========================
+# React Build Stage
+# ===========================
 FROM node:22-alpine AS frontend-build
 
 WORKDIR /frontend
@@ -11,7 +13,9 @@ COPY frontend-spa/ .
 RUN npm run build
 
 
-# ---------- Django + Gunicorn + Nginx ----------
+# ===========================
+# Django + Gunicorn + Nginx
+# ===========================
 FROM python:3.12-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1
@@ -19,6 +23,7 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app
 
+# Install system packages
 RUN apt-get update && apt-get install -y \
     gcc \
     pkg-config \
@@ -33,18 +38,21 @@ RUN apt-get update && apt-get install -y \
     nginx \
     && rm -rf /var/lib/apt/lists/*
 
-# Python packages
+# Install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy backend
+# Copy backend project
 COPY . .
 
-# Copy React build
+# Copy React production build
 COPY --from=frontend-build /frontend/build /usr/share/nginx/html
 
-# Copy nginx configuration
+# Copy nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Remove Debian default nginx site
+RUN rm -f /etc/nginx/sites-enabled/default
 
 # Make startup script executable
 RUN chmod +x /app/start.sh
