@@ -282,7 +282,7 @@ def register(request):
 
 
 
-@method_decorator(cache_page(60 * 5), name="dispatch")
+# @method_decorator(cache_page(60 * 5), name="dispatch")
 class ProductListAPIView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
@@ -1035,7 +1035,7 @@ class RemoveFromCartAPIView(APIView):
     
 
 
-@method_decorator(cache_page(60 * 5), name="dispatch")
+# @method_decorator(cache_page(60 * 5), name="dispatch")
 class ProductDetailAPIView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
