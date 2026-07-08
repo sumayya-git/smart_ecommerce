@@ -344,6 +344,22 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "Asia/Kolkata"
 
+# ==========================
+# REDIS CACHE CONFIGURATION
+# ==========================
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://redis:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "KEY_PREFIX": "smart_ecommerce",
+        "TIMEOUT": 300,   # 5 minutes
+    }
+}
+
 
 #==================================================================================================
 # PRODUCTION SECURITY SETTINGS

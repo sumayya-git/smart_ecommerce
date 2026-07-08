@@ -69,7 +69,7 @@ from.utils import success_response, error_response
 
 from django_ratelimit.decorators import ratelimit # fixed
 
-from django.utils.decorators import method_decorator
+
 from django.middleware.csrf import get_token
 
 from .logging import log_info, log_warning, log_error
@@ -79,6 +79,13 @@ from django.http import JsonResponse
 from .tasks import test_task
 
 from .tasks import send_order_email, send_invoice_email_task
+
+from django.core.cache import cache
+
+
+
+from django.views.decorators.cache import cache_page
+
 
 
 
@@ -121,6 +128,7 @@ def csrf_failure(request, reason=""):
 
 @ensure_csrf_cookie
 def csrf(request):
+    print("CSRF VIEW HIT")
     token = get_token(request)
 
     return JsonResponse({"csrftoken": token})
@@ -197,6 +205,8 @@ class LogoutView(APIView):
 
 
 
+
+@cache_page(60 * 5)
 @api_view(["GET"])
 def get_categories(request):
     categories = Category.objects.all()
@@ -270,19 +280,20 @@ def register(request):
     return Response({"message":"User created"})
 
 
+
+
+@method_decorator(cache_page(60 * 5), name="dispatch")
 class ProductListAPIView(generics.ListAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
+
     filter_backends = [SearchFilter, DjangoFilterBackend, OrderingFilter]
-    search_fields = ['name','category__name']
 
-    filterset_fields = ['category', 'price', 'stock', 'rating']
-
-    ordering_fields = ['price', 'rating', 'stock', 'created_at']
-
-    ordering = ['id']
-    
+    search_fields = ["name", "category__name"]
+    filterset_fields = ["category", "price", "stock", "rating"]
+    ordering_fields = ["price", "rating", "stock", "created_at"]
+    ordering = ["id"]
 
 class OrderInvoiceAPI(APIView):
   
@@ -1024,7 +1035,7 @@ class RemoveFromCartAPIView(APIView):
     
 
 
-
+@method_decorator(cache_page(60 * 5), name="dispatch")
 class ProductDetailAPIView(RetrieveAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
