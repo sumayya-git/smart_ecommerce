@@ -174,6 +174,8 @@ function Checkout(){
 
                             console.log(res);
 
+                            console.log("Order Response:", res.data);
+
                             
 
                             
