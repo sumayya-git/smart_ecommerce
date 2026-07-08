@@ -202,22 +202,40 @@ class LogoutView(APIView):
 
 
 
-
-
-
-
-# @cache_page(60 * 5)
+# # @cache_page(60 * 5)
 @api_view(["GET"])
 @permission_classes([AllowAny])
-
 def get_categories(request):
-    categories = Category.objects.all()
+
+    categories = cache.get("categories")
+
+    if categories is None:
+        print("CATEGORY CACHE MISS")
+
+        categories = Category.objects.all()
+
+        cache.set(
+            "categories",
+            categories,
+            timeout=300
+        )
+
+    else:
+        print("CATEGORY CACHE HIT")
+
     serializer = CategorySerializer(
         categories,
         many=True,
         context={"request": request}
     )
+
     return Response(serializer.data)
+
+
+
+
+
+
 
 @api_view(['GET'])
 @authentication_classes([SessionAuthentication])
@@ -286,7 +304,6 @@ def register(request):
 
 # @method_decorator(cache_page(60 * 5), name="dispatch")
 class ProductListAPIView(generics.ListAPIView):
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [AllowAny]
 
@@ -297,6 +314,17 @@ class ProductListAPIView(generics.ListAPIView):
     ordering_fields = ["price", "rating", "stock", "created_at"]
     ordering = ["id"]
 
+    def get_queryset(self):
+        products = cache.get("products")
+
+        if products is None:
+            print("CACHE MISS")
+            products = Product.objects.all()
+            cache.set("products", products, timeout=300)
+        else:
+            print("CACHE HIT")
+
+        return products
 class OrderInvoiceAPI(APIView):
   
     permission_classes = [IsAuthenticated]
@@ -711,10 +739,17 @@ class OrderCreateAPIView(APIView):
 
                     order.save()
 
+                    
+
+                    # Clear Redis cache because product stock has changed
+                    cache.delete("products")
+
                     log_info(f"Order {order.id} created by {request.user.username}")
 
                     # send_order_email.delay(order.user.email, order.id)
                     # send_invoice_email_task.delay(order.id)
+
+                    
 
                     
 
