@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
@@ -9,6 +10,8 @@ python manage.py migrate --noinput
 echo "Starting Gunicorn..."
 gunicorn ecommerce_project.wsgi:application \
     --bind 127.0.0.1:8000 &
+
+sleep 3
 
 echo "Starting Nginx..."
 nginx -g "daemon off;"
