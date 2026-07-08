@@ -176,6 +176,9 @@ function Checkout(){
 
                             console.log("Order Response:", res.data);
 
+                            const cartRes = await fetchCart();
+                            console.log("Cart After Order:", cartRes.data);
+
                             
 
                             
