@@ -179,7 +179,15 @@ function Checkout(){
                             const cartRes = await fetchCart();
                             console.log("Cart After Order:", cartRes.data);
 
+                            console.log("BEFORE EVENT");
+
                             
+                            
+
+                            
+
+                           
+                                                        
 
                             
                             
@@ -192,11 +200,16 @@ function Checkout(){
 
                                 window.dispatchEvent(new Event("cartUpdated"));
 
+                                console.log("BEFORE NAVIGATE");
+
                                 setTimeout(() => {
 
                                 
 
                                   navigate("/orders");
+
+                                   console.log("AFTER NAVIGATE");
+
 
                                 }, 500);
 
