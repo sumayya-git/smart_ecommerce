@@ -50,7 +50,7 @@ import base64
 from django.db.models import Q
 from store.models import UserProfile
 from django.db import transaction
-from store.utils import send_invoice_email
+# from store.utils import send_invoice_email
 
 
 from rest_framework.decorators import api_view

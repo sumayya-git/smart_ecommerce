@@ -1,23 +1,26 @@
 from celery import shared_task
 
-
-from django.core.mail import send_mail
-from django.conf import settings
-
+from store.api.brevo import send_brevo_email
 from store.utils import send_invoice_email
-
-
-
 
 
 @shared_task
 def send_order_email(customer_email, order_id):
-    send_mail(
+
+    html = f"""
+    <h2>Order Confirmed 🎉</h2>
+
+    <p>Thank you for shopping with <b>Smart Shop</b>.</p>
+
+    <p>Your Order ID is <b>#{order_id}</b>.</p>
+
+    <p>Your order has been received successfully.</p>
+    """
+
+    send_brevo_email(
+        to_email=customer_email,
         subject=f"Order #{order_id} Confirmed",
-        message=f"Thank you for your order.\n\nYour Order ID is {order_id}.",
-        from_email=settings.DEFAULT_FROM_EMAIL,
-        recipient_list=[customer_email],
-        fail_silently=False,
+        html_content=html,
     )
 
     return "Email Sent Successfully"
@@ -27,7 +30,6 @@ def send_order_email(customer_email, order_id):
 def test_task():
     print("✅ Celery is working!")
     return "Success"
-
 
 
 @shared_task
