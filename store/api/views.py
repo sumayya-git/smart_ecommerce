@@ -50,7 +50,7 @@ import base64
 from django.db.models import Q
 from store.models import UserProfile
 from django.db import transaction
-# from store.utils import send_invoice_email
+from store.utils import send_invoice_email
 
 
 from rest_framework.decorators import api_view
@@ -79,6 +79,8 @@ from django.http import JsonResponse
 from .tasks import test_task
 
 from .tasks import send_order_email, send_invoice_email_task
+
+from .resend import send_resend_email
 
 from django.core.cache import cache
 
@@ -746,7 +748,25 @@ class OrderCreateAPIView(APIView):
 
                     log_info(f"Order {order.id} created by {request.user.username}")
 
-                    send_order_email.delay(order.user.email, order.id)
+                    # send_order_email.delay(order.user.email, order.id)
+
+                    html = f"""
+                    <h2>🎉 Order Confirmed</h2>
+
+                    <p>Thank you for shopping with <b>Smart Shop</b>.</p>
+
+                    <p>Your Order ID is <b>#{order.id}</b>.</p>
+
+                    <p>Your order has been received successfully.</p>
+
+                    <p>We will notify you when your order is processed and shipped.</p>
+                    """
+
+                    send_resend_email(
+                        to_email=order.user.email,
+                        subject=f"Order #{order.id} Confirmed",
+                        html_content=html,
+                    )
                     # send_invoice_email_task.delay(order.id)
 
                     
@@ -1189,7 +1209,7 @@ class UpdateOrderStatusAPIView(APIView):
       
 
        if new_status == "DELIVERED":
-            send_invoice_email_task.delay(order.id)
+            # send_invoice_email_task.delay(order.id)
 
 
        

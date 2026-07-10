@@ -81,6 +81,9 @@ def send_invoice_email(order_id):
         timeout=30,
     )
 
+    print("Status:", response.status_code)
+    print("Body:", response.text)
+
     response.raise_for_status()
 
     print("✅ Invoice email sent successfully.")
