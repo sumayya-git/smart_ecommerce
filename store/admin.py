@@ -6,7 +6,7 @@ from django.utils.html import format_html
 
 from .utils import send_invoice_email
 
-from .resend import send_resend_email
+from .api.resend import send_resend_email
 
 
 class Orderiteminline(admin.TabularInline):
