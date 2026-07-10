@@ -95,6 +95,8 @@ class OrderAdmin(admin.ModelAdmin):
    
    def save_model(self, request, obj, form, change):
      
+     print("ADMIN SAVE_MODEL HIT")
+     
      old_status = None
 
      if change:
