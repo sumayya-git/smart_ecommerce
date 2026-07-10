@@ -1191,7 +1191,12 @@ class CancelOrderAPIView(APIView):
 class UpdateOrderStatusAPIView(APIView):
     permission_classes = [IsAdminUser]
 
+    
+
     def post(self, request, order_id):
+       
+       print("UPDATEORDERSTATUS API HIT")
+
        order = get_object_or_404(Order, id=order_id)
 
 
@@ -1204,6 +1209,8 @@ class UpdateOrderStatusAPIView(APIView):
        order.status = new_status
 
        order.save()
+
+       print("STATUS EMAIL TRIGGERED:", new_status)
 
        html = f"""
         <h2>Order Status Updated</h2>
@@ -1260,6 +1267,7 @@ class AdminUpdateOrderAPIView(APIView):
 
     def post(self, request, order_id):
         try:
+            print("ADMINUPDATEORDER API HIT")
             order = Order.objects.get(id=order_id)
         except Order.DoesNotExist:
              return Response({"error": "Order not found"},status=404)
@@ -1282,6 +1290,8 @@ class AdminDashboardStateAPIView(APIView):
     permission_classes = [IsAuthenticated,IsAdminUser]
 
     def get(self, request):
+
+       
         
         total_orders = Order.objects.count()
         total_users = User.objects.count()
