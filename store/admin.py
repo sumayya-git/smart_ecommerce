@@ -138,7 +138,7 @@ class OrderAdmin(admin.ModelAdmin):
 
                 send_resend_email(
                     to_email=obj.user.email,
-                    subject=f"Order #{obj.id} Status Updated",
+                    subject=f"Order #{obj.id} - {obj.status}",
                     html_content=html,
                 )
 
@@ -170,7 +170,7 @@ class OrderAdmin(admin.ModelAdmin):
 
                 send_resend_email(
                     to_email=obj.user.email,
-                    subject=f"Order #{obj.id} Status Updated",
+                    subject=f"Order #{obj.id} - {obj.status}",
                     html_content=html,
                 )
 
