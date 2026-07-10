@@ -6,16 +6,16 @@ from io import BytesIO
 import base64
 
 from xhtml2pdf import pisa
-
-import sib_api_v3_sdk
-from sib_api_v3_sdk.rest import ApiException
+import requests
 
 from .models import Order
 
 
 def send_invoice_email(order_id):
 
-    order = Order.objects.prefetch_related("items__product").get(id=order_id)
+    order = Order.objects.prefetch_related(
+        "items__product"
+    ).get(id=order_id)
 
     template = get_template("store/invoice.html")
 
@@ -52,49 +52,35 @@ def send_invoice_email(order_id):
         pdf_buffer.read()
     ).decode("utf-8")
 
-    configuration = sib_api_v3_sdk.Configuration()
+    headers = {
+        "Authorization": f"Bearer {settings.RESEND_API_KEY}",
+        "Content-Type": "application/json",
+    }
 
-    configuration.api_key["api-key"] = settings.BREVO_API_KEY
-
-    api_instance = sib_api_v3_sdk.TransactionalEmailsApi(
-        sib_api_v3_sdk.ApiClient(configuration)
-    )
-
-    email = sib_api_v3_sdk.SendSmtpEmail(
-
-        sender={
-            "name": "Smart Shop",
-            "email": "smartshop.notify@gmail.com"
-        },
-
-        to=[
+    data = {
+        "from": "Smart Shop <onboarding@resend.dev>",
+        "to": [order.user.email],
+        "subject": f"Invoice - Order #{order.id}",
+        "html": """
+            <h2>Invoice Attached</h2>
+            <p>Thank you for shopping with Smart Shop.</p>
+            <p>Your invoice is attached as a PDF.</p>
+        """,
+        "attachments": [
             {
-                "email": order.user.email
+                "filename": f"invoice_{order.id}.pdf",
+                "content": pdf_base64,
             }
         ],
+    }
 
-        subject=f"Invoice - Order #{order.id}",
-
-        html_content="""
-        <h2>Invoice Attached</h2>
-
-        <p>Thank you for shopping with Smart Shop.</p>
-
-        <p>Your invoice is attached as a PDF.</p>
-        """,
-
-        attachment=[
-            {
-                "name": f"invoice_{order.id}.pdf",
-                "content": pdf_base64
-            }
-        ]
+    response = requests.post(
+        "https://api.resend.com/emails",
+        headers=headers,
+        json=data,
+        timeout=30,
     )
 
-    try:
-        api_instance.send_transac_email(email)
-        print("Invoice email sent successfully.")
+    response.raise_for_status()
 
-    except ApiException as e:
-        print("Brevo API Error:", e)
-        raise
+    print("✅ Invoice email sent successfully.")

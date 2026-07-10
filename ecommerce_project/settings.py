@@ -283,6 +283,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv("BREVO_SMTP_LOGIN")
 EMAIL_HOST_PASSWORD = os.getenv("BREVO_SMTP_KEY")
 
+RESEND_API_KEY = os.getenv("RESEND_API_KEY")
+
 BREVO_API_KEY = os.getenv("BREVO_API_KEY")
 
 MEDIA_URL ='/media/'
@@ -345,6 +347,17 @@ LOGGING = {
 # Celery Configuration
 CELERY_BROKER_URL = os.getenv("REDIS_URL")
 CELERY_RESULT_BACKEND = os.getenv("REDIS_URL")
+
+import ssl
+
+CELERY_BROKER_USE_SSL = {
+    "ssl_cert_reqs": ssl.CERT_NONE,
+}
+
+CELERY_REDIS_BACKEND_USE_SSL = {
+    "ssl_cert_reqs": ssl.CERT_NONE,
+}
+
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
