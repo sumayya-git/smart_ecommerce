@@ -12,7 +12,7 @@ sed -i "s/listen 80;/listen ${PORT};/" /etc/nginx/conf.d/default.conf
 
 echo "Starting Gunicorn..."
 gunicorn ecommerce_project.wsgi:application \
-    --bind 0.0.0:0:${PORT} \
+    --bind 0.0.0.0:${PORT} \
     --workers 1 \
     --timeout 120 \
     --log-level debug 
