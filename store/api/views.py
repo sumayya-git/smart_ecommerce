@@ -1202,7 +1202,26 @@ class UpdateOrderStatusAPIView(APIView):
        if new_status not in allowed_status:
           return Response({"error": "Invalid status"}, status=400)
        order.status = new_status
+
        order.save()
+
+       html = f"""
+        <h2>Order Status Updated</h2>
+
+        <p>Hello <b>{order.user.username}</b>,</p>
+
+        <p>Your Order <b>#{order.id}</b> status has been updated.</p>
+
+        <h3>Status: {new_status}</h3>
+
+        <p>Thank you for shopping with Smart Commerce.</p>
+        """
+
+       send_resend_email(
+            to_email=order.user.email,
+            subject=f"Order #{order.id} Status Updated",
+            html_content=html,
+        )
 
        cache.delete("orders")
 
