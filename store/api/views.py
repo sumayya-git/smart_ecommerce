@@ -1209,6 +1209,7 @@ class UpdateOrderStatusAPIView(APIView):
       
 
        if new_status == "DELIVERED":
+           send_invoice_email(order.id)
             # send_invoice_email_task.delay(order.id)
 
 
@@ -1216,7 +1217,7 @@ class UpdateOrderStatusAPIView(APIView):
         
            
        return success_response(
-                message=f"Order updated to {new_status}"
+          message=f"Order updated to {new_status}"
                 
         )
     
