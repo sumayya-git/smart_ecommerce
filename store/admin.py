@@ -6,6 +6,8 @@ from django.utils.html import format_html
 
 from .utils import send_invoice_email
 
+from .resend import send_resend_email
+
 
 class Orderiteminline(admin.TabularInline):
    model = OrderItem
@@ -92,6 +94,11 @@ class OrderAdmin(admin.ModelAdmin):
    
    
    def save_model(self, request, obj, form, change):
+     
+     old_status = None
+
+     if change:
+        old_status = Order.objects.get(pk=obj.pk).status
     #obj.refresh_from_db()
 
     #updated_fields = []
@@ -112,19 +119,42 @@ class OrderAdmin(admin.ModelAdmin):
 
      super().save_model(request, obj, form, change)
 
+     if change and old_status != obj.status:
+      # send_resend_email(...)
+
             
 
-     if obj.status == "DELIVERED":
+      if obj.status == "DELIVERED":
             send_invoice_email(obj.id)
 
-     if obj.user.email:
-            send_mail(
-               subject=f"Order #{obj.id} Status Update",
-               message=f"Your order status is now: {obj.status}",
-               from_email='smartshop.notify@gmail.com',
-               recipient_list=[obj.user.email],
-               fail_silently=True
-            )
+            if obj.user.email:
+
+                html = f"""
+                <h2>Order Status Updated</h2>
+
+                <p>Hello <b>{obj.user.username}</b>,</p>
+
+                <p>Your Order <b>#{obj.id}</b> status has been updated.</p>
+
+                <h3>Status: {obj.status}</h3>
+
+                <p>Thank you for shopping with Smart Commerce.</p>
+                """
+
+                send_resend_email(
+                    to_email=obj.user.email,
+                    subject=f"Order #{obj.id} Status Updated",
+                    html_content=html,
+                )
+
+    #  if obj.user.email:
+    #         send_mail(
+    #            subject=f"Order #{obj.id} Status Update",
+    #            message=f"Your order status is now: {obj.status}",
+    #            from_email='smartshop.notify@gmail.com',
+    #            recipient_list=[obj.user.email],
+    #            fail_silently=True
+    #         )
 
    
            #updated_fields.append("delivered_at")
