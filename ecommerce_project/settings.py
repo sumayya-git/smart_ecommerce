@@ -42,6 +42,7 @@ CSRF_TRUSTED_ORIGINS = [
                     "https://smart-ecommerce-backend.onrender.com",
                     "https://smart-ecommerce-web.onrender.com",
                     "https://web-production-531cc.up.railway.app",
+                    "https://smart-ecommerce-2zen.onrender.com",
 
                         ]
 
