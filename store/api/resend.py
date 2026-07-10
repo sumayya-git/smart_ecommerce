@@ -11,7 +11,7 @@ def send_resend_email(to_email, subject, html_content):
     }
 
     data = {
-        "from": "Smart Commerce <onboarding@resend.dev>",
+        "from": "Smart Shop <onboarding@resend.dev>",
         "to": [to_email],
         "subject": subject,
         "html": html_content,
