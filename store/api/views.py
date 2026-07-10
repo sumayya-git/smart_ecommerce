@@ -746,7 +746,7 @@ class OrderCreateAPIView(APIView):
 
                     log_info(f"Order {order.id} created by {request.user.username}")
 
-                    # send_order_email.delay(order.user.email, order.id)
+                    send_order_email.delay(order.user.email, order.id)
                     # send_invoice_email_task.delay(order.id)
 
                     
