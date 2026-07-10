@@ -121,7 +121,32 @@ class OrderAdmin(admin.ModelAdmin):
 
      super().save_model(request, obj, form, change)
 
+     print("AFTER SAVE")
+     print("STATUS =", obj.status)
+
      if change and old_status != obj.status:
+
+            print("STATUS CHANGED")
+
+            if obj.user.email:
+                print("BEFORE SEND EMAIL")
+
+                html = f"""
+                <h2>Order Status Updated</h2>
+                <p>Your order #{obj.id} status is <b>{obj.status}</b></p>
+                """
+
+                send_resend_email(
+                    to_email=obj.user.email,
+                    subject=f"Order #{obj.id} Status Updated",
+                    html_content=html,
+                )
+
+                print("AFTER SEND EMAIL")
+
+     if change and old_status != obj.status:
+      
+      
       # send_resend_email(...)
 
             
