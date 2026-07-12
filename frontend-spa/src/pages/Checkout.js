@@ -11,6 +11,8 @@ import OrderSummary from "../components/OrderSummary";
 
 import AddressForm from "../components/AddressForm";
 
+import axios from "../services/axiosInstance";
+
 // import { toast } from "react-toastify";
 
 
@@ -162,6 +164,62 @@ function Checkout(){
                             }));
 
                         }
+
+
+                    if (paymentMethod === "ONLINE") {
+
+                                // Create Razorpay Order
+                                const paymentRes = await axios.post(
+                                    "/create-payment-order/",
+                                    {
+                                        amount: totalAmount
+                                    }
+                                );
+
+                                const orderData = paymentRes.data.data;
+
+                                const options = {
+                                    key: process.env.REACT_APP_RAZORPAY_KEY_ID,
+
+                                    amount: orderData.amount * 100,
+
+                                    currency: "INR",
+
+                                    name: "Smart Commerce",
+
+                                    description: "Order Payment",
+
+                                    order_id: orderData.razorpay_order_id,
+
+                                    handler: async function (response) {
+
+                                        await axios.post("/verify-payment/", {
+
+                                                order_id: orderData.razorpay_order_id,
+
+                                                razorpay_order_id: response.razorpay_order_id,
+
+                                                razorpay_payment_id: response.razorpay_payment_id,
+
+                                                razorpay_signature: response.razorpay_signature,
+
+                                                address: address
+
+                                            });
+                                        window.dispatchEvent(new Event("cartUpdated"));
+
+                                        navigate("/orders");
+                                    },
+
+                                    theme: {
+                                        color: "#3399cc"
+                                    }
+                                };
+
+                                const rzp = new window.Razorpay(options);
+
+                                rzp.open();
+                            }
 
                          
                          const res = await createOrder({

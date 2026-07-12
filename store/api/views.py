@@ -88,6 +88,8 @@ from django.core.cache import cache
 
 from django.views.decorators.cache import cache_page
 
+import time
+
 
 
 
@@ -877,13 +879,11 @@ class CreatePaymentOrderAPIView(APIView):
       try:
       
          payment = client.order.create({
-                'amount': int(float(amount) * 100),
-                 'currency':"INR",
-                 'payment_capture': 1,
-                 
-         
-          })
-      
+                "amount": int(float(amount) * 100),
+                "currency": "INR",
+                "receipt": f"receipt_{request.user.id}_{int(time.time())}",
+                "payment_capture": 1,
+            })
 
 
          return success_response(
@@ -913,6 +913,10 @@ class VerifyPaymentAPIView(APIView):
         cart_items = CartItem.objects.filter(cart__user=request.user)
         
         order_id = request.data.get("order_id")
+
+        print("VERIFY PAYMENT HIT")
+        print(request.data)
+
         razorpay_payment_id = request.data.get("razorpay_payment_id")
         razorpay_order_id = request.data.get("razorpay_order_id")
         razorpay_signature = request.data.get("razorpay_signature")
@@ -937,16 +941,20 @@ class VerifyPaymentAPIView(APIView):
                 razorpay_signature
             }
              
-            #client.utility.verify_payment_signature(params)
+            client.utility.verify_payment_signature(params)
+
+            print("SIGNATURE VERIFIED")
+
+            address = request.data.get("address")
 
 
             order = Order.objects.create(
                 user=request.user,
-                address="Chennai Tamil Nadu India",
-                # payment_method="ONLINE",
+                address=address,
+                payment_method="ONLINE",
                 payment_status="PAID",
                 status="PLACED",
-                total_amount=0 
+                total_amount=0
             )
             
             total = 0
@@ -968,12 +976,30 @@ class VerifyPaymentAPIView(APIView):
                     quantity=qty,
                     price=price
                 )
-            
+
+                product.stock -= qty
+                product.save()    
+
+                cache.delete("products")
            
                 total += price
 
             order.total_amount = total
             order.save()
+
+            html = f"""
+            <h2>🎉 Payment Successful</h2>
+
+            <p>Your payment for Order <b>#{order.id}</b> was successful.</p>
+
+            <p>Thank you for shopping with <b>Smart Commerce</b>.</p>
+            """
+
+            send_resend_email(
+                to_email=order.user.email,
+                subject=f"Payment Successful - Order #{order.id}",
+                html_content=html,
+            )
 
             log_info(f"Payment successful for Order {order.id}")
 
@@ -983,6 +1009,9 @@ class VerifyPaymentAPIView(APIView):
        
 
             CartItem.objects.filter(cart__user=request.user).delete()
+
+            cache.delete("products")
+            cache.delete("orders")
 
             return success_response(message="Payment successful")
         except Order.DoesNotExist:
