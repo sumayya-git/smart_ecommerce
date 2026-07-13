@@ -128,45 +128,7 @@ function Checkout(){
                 return;
             }
 
-
-           
-        
-       
-              
-                    
-                    if (paymentMethod === "COD"){
-                        
-                
-
-                                 
-                        // const finalItems = cart.map(item => ({
-                        //         product_id:item.product?.id || item.product_id || item.id,
-                        //         quantity: item.quantity,
-                        //     }));
-
-
-                                                let finalItems;
-
-                        if (isBuyNow) {
-
-                            finalItems = [
-                                {
-                                    product_id: buyNowData.product.id,
-                                    quantity: buyNowData.quantity,
-                                }
-                            ];
-
-                        } else {
-
-                            finalItems = cart.map(item => ({
-                                product_id: item.product?.id || item.product_id || item.id,
-                                quantity: item.quantity,
-                            }));
-
-                        }
-
-
-                    if (paymentMethod === "ONLINE") {
+            if (paymentMethod === "ONLINE") {
 
                                 // Create Razorpay Order
                                 const paymentRes = await API.post(
@@ -220,6 +182,46 @@ function Checkout(){
 
                                 rzp.open();
                             }
+
+
+           
+        
+       
+              
+                    
+                    if (paymentMethod === "COD"){
+                        
+                
+
+                                 
+                        // const finalItems = cart.map(item => ({
+                        //         product_id:item.product?.id || item.product_id || item.id,
+                        //         quantity: item.quantity,
+                        //     }));
+
+
+                                                let finalItems;
+
+                        if (isBuyNow) {
+
+                            finalItems = [
+                                {
+                                    product_id: buyNowData.product.id,
+                                    quantity: buyNowData.quantity,
+                                }
+                            ];
+
+                        } else {
+
+                            finalItems = cart.map(item => ({
+                                product_id: item.product?.id || item.product_id || item.id,
+                                quantity: item.quantity,
+                            }));
+
+                        }
+
+
+                    
 
                          
                          const res = await createOrder({
