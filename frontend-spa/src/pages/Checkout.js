@@ -11,7 +11,7 @@ import OrderSummary from "../components/OrderSummary";
 
 import AddressForm from "../components/AddressForm";
 
-import axios from "../services/axiosInstance";
+import API from "../api";
 
 // import { toast } from "react-toastify";
 
