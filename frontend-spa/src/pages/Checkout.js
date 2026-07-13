@@ -169,7 +169,7 @@ function Checkout(){
                     if (paymentMethod === "ONLINE") {
 
                                 // Create Razorpay Order
-                                const paymentRes = await axios.post(
+                                const paymentRes = await API.post(
                                     "/create-payment-order/",
                                     {
                                         amount: totalAmount
@@ -193,7 +193,7 @@ function Checkout(){
 
                                     handler: async function (response) {
 
-                                        await axios.post("/verify-payment/", {
+                                        await API.post("/verify-payment/", {
 
                                                 order_id: orderData.razorpay_order_id,
 
