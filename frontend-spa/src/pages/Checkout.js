@@ -140,6 +140,11 @@ function Checkout(){
 
                                 const orderData = paymentRes.data.data;
 
+                                console.log(process.env.REACT_APP_RAZORPAY_KEY_ID);
+
+                                console.log("KEY =", process.env.REACT_APP_RAZORPAY_KEY_ID);
+
+
                                 const options = {
                                     key: process.env.REACT_APP_RAZORPAY_KEY_ID,
 
