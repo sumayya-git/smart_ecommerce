@@ -132,7 +132,7 @@ function Checkout(){
 
                                 // Create Razorpay Order
                                 const paymentRes = await API.post(
-                                    "/create-payment-order/",
+                                    "/create-create-order/",
                                     {
                                         amount: totalAmount
                                     }
