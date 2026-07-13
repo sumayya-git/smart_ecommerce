@@ -148,7 +148,7 @@ function Checkout(){
                                 const options = {
                                     key: process.env.REACT_APP_RAZORPAY_KEY_ID,
 
-                                    amount: orderData.amount * 100,
+                                    amount: orderData.amount,
 
                                     currency: "INR",
 
