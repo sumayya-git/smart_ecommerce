@@ -5,7 +5,7 @@ echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
 echo "Running migrations..."
-# python manage.py migrate --noinput
+python manage.py migrate --noinput
 
 echo "Setting nginx port..."
 sed -i "s/listen 80;/listen ${PORT};/" /etc/nginx/conf.d/default.conf
