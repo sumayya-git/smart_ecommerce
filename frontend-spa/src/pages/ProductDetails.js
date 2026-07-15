@@ -166,7 +166,7 @@ function ProductDetails({refreshCart}){
     return(
         <div style={{padding:"20px"}}>
             {product.image && (
-              <img src={product.image?.replace("https://smart-ecommerce-backend.onrender.com","http://127.0.0.1:8000")}
+              <img src={product.image}
                 alt={product.name}
                 style={{
                     width:"300px",
@@ -206,7 +206,7 @@ function ProductDetails({refreshCart}){
                                 marginBottom: "12px"
                             }}
                         >
-                            {product.stock > 0
+                            {product.stock <= 5
                                 ? `Only ${product.stock} left in stock ⚠️`
                                 : "Out of Stock"}
                         </p>
@@ -240,7 +240,7 @@ function ProductDetails({refreshCart}){
                         <button onClick={handleBuyNow} disabled={cartLoading}
                            
                             style={{
-                                background: product.stock === 0 ? "#ccc": "#007bff",
+                                background: product.stock === 0 ? "#ccc": "#ffa41c",
                                 cursor: product.stock === 0 ? "not-allowed": "pointer",
                             
                             
