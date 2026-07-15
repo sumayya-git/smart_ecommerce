@@ -24,16 +24,9 @@ from rest_framework_simplejwt.views import(
 )
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-   
-    path('api/token/refresh/',TokenRefreshView.as_view(),name='token_refresh'),
-    # path('api/', include('store.urls')),
-    path('api/', include('store.api.urls')),
-    # path('api-auth/', include('rest_framework.urls')),
-   
-      
-] 
+    path("admin/", admin.site.urls),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path("api/", include("store.api.urls")),
+]
 
-if settings.DEBUG:
-
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
