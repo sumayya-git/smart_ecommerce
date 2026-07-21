@@ -101,6 +101,16 @@ function CategoryHome() {
                                       
                                       }}
                                       />
+
+                                      <p
+                                              style={{
+                                                fontSize: "8px",
+                                                wordBreak: "break-all",
+                                                color: "red",
+                                              }}
+                                            >
+                                              {sub.image}
+                                            </p>
                                       
                                         
                                           
