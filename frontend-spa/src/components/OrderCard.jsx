@@ -98,14 +98,26 @@ function OrderCard({
                           
                                Return Order</button>)}
 
+                        {(
+                            order.status === "DELIVERED" ||
+                            (order.payment_method === "ONLINE" &&
+                            order.payment_status === "PAID")
+                        ) && (
+                            <div style={{ marginTop: "10px" }}>
+                                <button onClick={() => downloadInvoice(order.id)}>
+                                    Download Invoice
+                                </button>
+                            </div>
+                        )}
 
-                 {order.status === "DELIVERED" && (
+
+                 {/* {order.status === "DELIVERED" && (
                         <div style={{ marginTop: "10px" }}>
                             <button onClick={() => downloadInvoice(order.id)}>
                                 Download Invoice
                             </button>
                         </div>
-                    )}
+                    )} */}
 
         {order.status !== "CANCELLED" && (
         <p><b>Method:</b>{order.payment_method}</p>)}

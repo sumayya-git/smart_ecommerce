@@ -60,12 +60,36 @@ def send_invoice_email(order_id):
     data = {
         "from": "Smart Shop <onboarding@resend.dev>",
         "to": [order.user.email],
-        "subject": f"Invoice - Order #{order.id}",
-        "html": """
-            <h2>Invoice Attached</h2>
-            <p>Thank you for shopping with Smart Shop.</p>
-            <p>Your invoice is attached as a PDF.</p>
+        "subject": f"Order #{order.id} Confirmed",
+
+        "html": f"""
+        <h2>🎉 Order Confirmed</h2>
+
+        <p>Hello <b>{order.user.username}</b>,</p>
+
+        <p>Thank you for shopping with <b>Smart Commerce</b>.</p>
+
+        <p>Your Order ID is <b>#{order.id}</b>.</p>
+
+        <p>✅ Your payment has been received successfully.</p>
+
+        <p>Your order has been confirmed and is now being processed.</p>
+
+        <p>📎 Your invoice is attached with this email as a PDF.</p>
+
+        <p>We will notify you when your order is shipped.</p>
+
+        <br>
+
+        <p>Thank you,<br>
+        <b>Smart Commerce Team</b></p>
         """,
+        # "subject": f"Invoice - Order #{order.id}",
+        # "html": """
+        #     <h2>Invoice Attached</h2>
+        #     <p>Thank you for shopping with Smart Shop.</p>
+        #     <p>Your invoice is attached as a PDF.</p>
+        # """,
         "attachments": [
             {
                 "filename": f"invoice_{order.id}.pdf",

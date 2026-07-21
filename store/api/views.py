@@ -987,21 +987,57 @@ class VerifyPaymentAPIView(APIView):
             order.total_amount = total
             order.save()
 
-            html = f"""
-            <h2>🎉 Payment Successful</h2>
+                       
 
-            <p>Your payment for Order <b>#{order.id}</b> was successful.</p>
-
-            <p>Thank you for shopping with <b>Smart Commerce</b>.</p>
-            """
-
-            send_resend_email(
-                to_email=order.user.email,
-                subject=f"Payment Successful - Order #{order.id}",
-                html_content=html,
-            )
+            send_invoice_email(order.id)
 
             log_info(f"Payment successful for Order {order.id}")
+
+            CartItem.objects.filter(cart__user=request.user).delete()
+
+            cache.delete("products")
+            cache.delete("orders")
+
+            return success_response(message="Payment successful")
+
+            html = f"""
+            <h2>🎉 Order Confirmed</h2>
+
+            <p>Hello <b>{order.user.username}</b>,</p>
+
+            <p>Thank you for shopping with <b>Smart Commerce</b>.</p>
+
+            <p>Your Order ID is <b>#{order.id}</b>.</p>
+
+            <p>✅ Your payment has been received successfully.</p>
+
+            <p>Your order has been confirmed and is now being processed.</p>
+
+            <p>Your invoice is attached with this email as a PDF.</p>
+
+            <p>We will notify you when your order is shipped.</p>
+
+            <br>
+
+            <p>Thank you,<br>
+            <b>Smart Commerce Team</b></p>
+            """
+
+            # html = f"""
+            # <h2>🎉 Payment Successful</h2>
+
+            # <p>Your payment for Order <b>#{order.id}</b> was successful.</p>
+
+            # <p>Thank you for shopping with <b>Smart Commerce</b>.</p>
+            # """
+
+            # send_resend_email(
+            #     to_email=order.user.email,
+            #     subject=f"Payment Successful - Order #{order.id}",
+            #     html_content=html,
+            # )
+
+            # log_info(f"Payment successful for Order {order.id}")
 
 
       
