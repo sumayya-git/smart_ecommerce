@@ -208,7 +208,7 @@ function ProductDetails({refreshCart}){
                         >
                             {product.stock <= 5
                                 ? `Only ${product.stock} left in stock ⚠️`
-                                : "Out of Stock"}
+                                : "In Stock✅"}
                         </p>
                      <button 
                        
