@@ -7,6 +7,7 @@ import API from "../api";
 function CategoryHome() {
 
     const [categories, setCategories] = useState([]);
+    const [hoveredId, setHoveredId] = useState(null);
 
    
     const navigate = useNavigate();
@@ -91,11 +92,20 @@ function CategoryHome() {
                               console.log(sub.image);
                               return(
                             
-                                <div key={sub.id}
-                                    onClick={() => navigate(`/category/${sub.id}`)}
 
-                                    style={{ cursor:"pointer", textAlign:"center" }}
-                                    >
+                                                                      <div
+                                        key={sub.id}
+                                        onClick={() => navigate(`/category/${sub.id}`)}
+                                        onMouseEnter={() => setHoveredId(sub.id)}
+                                        onMouseLeave={() => setHoveredId(null)}
+                                        style={{
+                                          cursor: "pointer",
+                                          textAlign: "center",
+                                          transform:
+                                            hoveredId === sub.id ? "translateY(-5px)" : "translateY(0)",
+                                          transition: "all 0.3s ease",
+                                        }}
+                                      >
 
                                      
                                       <img src={sub.image}
