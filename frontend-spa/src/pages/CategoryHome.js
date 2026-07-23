@@ -106,7 +106,14 @@ function CategoryHome() {
                                       
                                         
                                           
-                                            <p>{sub.name}</p>
+                                            <p
+                                                  style={{
+                                                    color: "#000",
+                                                    fontWeight: 600,
+                                                  }}
+                                                >
+                                                  {sub.name}
+                                            </p>
                                             </div>
                               );
                             })}
