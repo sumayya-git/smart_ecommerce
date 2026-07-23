@@ -152,7 +152,7 @@ function CategoryProducts() {
                        
                        
                         <p style={{ fontWeight:"bold" }}>{product.name}</p>
-                        <p style={{ color:"green"}}>${product.price}</p>
+                        <p style={{ color:"green"}}>₹{product.price}</p>
 
                         <p style={{
                             color: product.stock === 0 ? "red" : product.stock <= 5 ? "orange" :"green",

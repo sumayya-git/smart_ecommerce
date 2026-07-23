@@ -789,8 +789,29 @@ The following screenshots demonstrate the major workflows of the application.
 | 📜 Order History | 📈 Revenue Reports |
 | 📄 PDF Invoice | 🔄 Return & Refund Workflow |
 
-> **Screenshots will be added soon.**
+### 🏠 Home Page
 
+![Home Page](docs/screenshots/home.png)
+
+### 🛒 Cart
+
+![Cart](docs/screenshots/cart.png)
+
+### 💳 Checkout
+
+![Checkout](docs/screenshots/checkout.png)
+
+### 📦 Product Details
+
+![Product Details](docs/screenshots/product-details.png)
+
+### 📍 Order Tracking
+
+![Order Tracking](docs/screenshots/order-tracking.png)
+
+### 🛠️ Admin Dashboard
+
+![Admin Dashboard](docs/screenshots/admin-dashboard.png)
 ---
 
 # 📈 Future Improvements

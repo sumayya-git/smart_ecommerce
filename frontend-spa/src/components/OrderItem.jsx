@@ -18,11 +18,11 @@ function OrderItem({ item }) {
 
 
             <p>
-                <b>Price: ${item.price}</b>
+                <b>Price: ₹{item.price}</b>
             </p>
 
             <p>
-                <b>Subtotal: ${item.subtotal}</b>
+                <b>Subtotal: ₹{item.subtotal}</b>
             </p>
         </div>
     )

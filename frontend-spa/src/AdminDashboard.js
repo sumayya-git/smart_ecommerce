@@ -177,7 +177,7 @@ return (
 
          <div style={cardStyle}>
             <h4>Total Revenue</h4>
-            <h2>${stats?.total_revenue || 0}</h2>
+            <h2>₹{stats?.total_revenue || 0}</h2>
         </div>
 
             
@@ -222,7 +222,7 @@ return (
     {monthly && (
         <div style={{ marginBottom: "30px"}}>
             <h3>Last 30 Days</h3>
-            <p>Revenue:${monthly.monthly_revenue}</p>
+            <p>Revenue:₹{monthly.monthly_revenue}</p>
             <p>Orders Count: {monthly.orders_count}</p>
            
     
@@ -249,7 +249,7 @@ return (
                 
         
                     <td>{product.name}</td>
-                    <td>${product.total_revenue}</td>
+                    <td>₹{product.total_revenue}</td>
                     <td style={{ color: product.stock <= 5 ? "red": "black"}}>
                         {product.stock}
                     </td>
@@ -273,3 +273,5 @@ return (
 
 
 export default AdminDashboard;
+
+

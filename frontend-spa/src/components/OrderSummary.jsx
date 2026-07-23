@@ -5,7 +5,7 @@ function OrderSummary({
 
         return(
             <div style={{ marginTop:"20px"}}>
-            <h3> Total: ${totalAmount}</h3>
+            <h3> Total: ₹{totalAmount}</h3>
 
             <button onClick={placeOrder}
               style={{

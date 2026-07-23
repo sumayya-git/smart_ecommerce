@@ -194,7 +194,7 @@ function Cart() {
               <img src={item.product.image} alt="" style={{ width: "80px", height: "80px", objectFit: "cover" }} />
               <div>
                 <h4>{item.product.name}</h4>
-                <p>${item.product.price}</p>
+                <p>₹{item.product.price}</p>
               </div>
             </div>
 
@@ -214,7 +214,7 @@ function Cart() {
                 style={{ color: "red", marginTop: "10px" }}>{removeLoading ? "Removing..." : "Remove"}
               </button>
 
-              <h4>${item.product.price * item.quantity}</h4>
+              <h4>₹{item.product.price * item.quantity}</h4>
 
             </div>
           </div>
@@ -231,7 +231,7 @@ function Cart() {
           <>
 
 
-            <h3>Total:${totalAmount}</h3>
+            <h3>Total:₹{totalAmount}</h3>
 
 
             <button
