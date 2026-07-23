@@ -69,7 +69,15 @@ function CategoryHome() {
                               
                             }}>
 
-                              <h3>{parent.name}</h3>
+                              <h3
+                                  style={{
+                                    color: "#212121",
+                                    fontWeight: "bold",
+                                    marginBottom: "15px",
+                                  }}
+                                >
+                                  {parent.name}
+                                </h3>
 
                               <div style={{
                                 display:"grid",
@@ -107,12 +115,14 @@ function CategoryHome() {
                                         
                                           
                                             <p
-                                                  style={{
-                                                    color: "#000",
-                                                    fontWeight: 600,
-                                                  }}
-                                                >
-                                                  {sub.name}
+                                              style={{
+                                                color: "#212121",
+                                                fontWeight: "bold",
+                                                marginTop: "8px",
+                                                marginBottom: "0",
+                                              }}
+                                            >
+                                              {sub.name}
                                             </p>
                                             </div>
                               );
