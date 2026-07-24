@@ -4,8 +4,9 @@ set -e
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
-echo "MEDIA CONTENT:"
-find /app/media
+# Create media folders if they don't exist
+mkdir -p /app/media/categories
+mkdir -p /app/media/products
 
 echo "Running migrations..."
 python manage.py migrate --noinput
