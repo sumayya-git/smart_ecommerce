@@ -785,9 +785,9 @@ The following screenshots demonstrate the major workflows of the application.
 | 🏠 Home Page | 📊 Dashboard |
 | 📦 Product Details | 📂 Category Management |
 | 🛒 Shopping Cart | 📦 Product Management |
-| 💳 Checkout | 📋 Order Management |
-| 📜 Order History | 📈 Revenue Reports |
-| 📄 PDF Invoice | 🔄 Return & Refund Workflow |
+| 📍 Order Tracking | 📋 Order Management |
+| | 📈 Revenue Reports |
+| | 🔄 Return & Refund Workflow |
 
 ### 🏠 Home Page
 
@@ -796,10 +796,6 @@ The following screenshots demonstrate the major workflows of the application.
 ### 🛒 Cart
 
 ![Cart](docs/screenshots/cart.png)
-
-### 💳 Checkout
-
-![Checkout](docs/screenshots/checkout.png)
 
 ### 📦 Product Details
 
