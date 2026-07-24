@@ -96,7 +96,7 @@ useEffect(() => {
         <Route path="/product/:id" element={<ProductDetails refreshCart={fetchCartCount} />} />
         <Route path="/register" element={<Register />} />
         <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-        <Route path="/admin-dashboard" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
+        <Route path="/admin" element={<AdminRoute><AdminDashboard /></AdminRoute>} />
 
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/checkout" element={<Checkout />} />
