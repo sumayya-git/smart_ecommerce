@@ -16,16 +16,25 @@ class CategorySerializer(serializers.ModelSerializer):
     def get_image(self, obj):
         request = self.context.get("request")
         if obj.image:
-            return request.build_absolute_uri(obj.image.url)
+             url = request.build_absolute_uri(obj.image.url)
+             return url.replace("http://", "https://")
         return None
 
+    
 class ProductSerializer(serializers.ModelSerializer):
-    image = serializers.ImageField(use_url=True)
-    category_name =serializers.CharField(source="category.name", read_only=True)
+    image = serializers.SerializerMethodField()
+    category_name = serializers.CharField(source="category.name", read_only=True)
+
     class Meta:
         model = Product
         fields = "__all__"
 
+    def get_image(self, obj):
+        request = self.context.get("request")
+        if obj.image:
+            url = request.build_absolute_uri(obj.image.url)
+            return url.replace("http://", "https://")
+        return None
 
 class CartItemSerializer(serializers.ModelSerializer):
     product = ProductSerializer()
