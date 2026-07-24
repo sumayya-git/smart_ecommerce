@@ -782,11 +782,10 @@ The following screenshots demonstrate the major workflows of the application.
 
 | Customer | Admin |
 |----------|-------|
-| 🏠 Home Page | 📊 Dashboard |
+| 🏠 Home Page |  |
 | 📦 Product Details | 📂 Category Management |
 | 🛒 Shopping Cart | 📦 Product Management |
 | 📍 Order Tracking | 📋 Order Management |
-| | 📈 Revenue Reports |
 | | 🔄 Return & Refund Workflow |
 
 ### 🏠 Home Page
@@ -805,9 +804,6 @@ The following screenshots demonstrate the major workflows of the application.
 
 ![Order Tracking](docs/screenshots/order-tracking.png)
 
-### 🛠️ Admin Dashboard
-
-![Admin Dashboard](docs/screenshots/admin-dashboard.png)
 ---
 
 # 📈 Future Improvements
