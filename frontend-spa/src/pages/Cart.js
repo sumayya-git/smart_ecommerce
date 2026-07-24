@@ -214,8 +214,7 @@ function Cart() {
                 style={{ color: "red", marginTop: "10px" }}>{removeLoading ? "Removing..." : "Remove"}
               </button>
 
-              <h4>₹{item.product.price * item.quantity}</h4>
-
+              
             </div>
           </div>
         ))}
