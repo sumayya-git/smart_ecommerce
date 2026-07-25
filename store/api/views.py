@@ -1073,39 +1073,19 @@ class CartDetailAPIView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
+        from .serializers import CartSerializer
 
-        try:
-            print("STEP 1")
+        cart, _ = Cart.objects.get_or_create(user=request.user)
 
-            from .serializers import CartSerializer
+        serializer = CartSerializer(
+            cart,
+            context={"request": request}
+        )
 
-            print("STEP 2")
-
-            cart, created = Cart.objects.get_or_create(user=request.user)
-
-            print("STEP 3", cart.id)
-
-            serializer = CartSerializer(cart)
-
-            print("STEP 4")
-
-            data = serializer.data
-
-            print("STEP 5")
-
-            return success_response(
-                message="Cart fetched successfully",
-                data=data
-            )
-
-        except Exception as e:
-            import traceback
-            print(traceback.format_exc())
-
-            return Response(
-                {"error": str(e)},
-                status=500
-            )
+        return success_response(
+            message="Cart fetched successfully",
+            data=serializer.data
+        )
 
 
 

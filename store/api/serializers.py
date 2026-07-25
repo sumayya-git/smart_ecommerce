@@ -13,12 +13,19 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = "__all__"
 
+    
+
     def get_image(self, obj):
+        if not obj.image:
+            return None
+
         request = self.context.get("request")
-        if obj.image:
-             url = request.build_absolute_uri(obj.image.url)
-             return url.replace("http://", "https://")
-        return None
+
+        if request:
+            url = request.build_absolute_uri(obj.image.url)
+            return url.replace("http://", "https://")
+
+        return obj.image.url
 
     
 class ProductSerializer(serializers.ModelSerializer):
