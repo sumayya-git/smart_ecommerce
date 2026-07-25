@@ -61,5 +61,5 @@ urlpatterns = [
     path("csrf/", csrf),
     path("order/<int:order_id>/refund-details/",RefundDetailsAPIView.as_view()),
 
-    path("create-admin/", create_admin),
+    
 ]

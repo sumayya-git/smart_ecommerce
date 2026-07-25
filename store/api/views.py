@@ -92,35 +92,7 @@ import time
 
 
 
-from django.views.decorators.http import require_POST
 
-import os
-
-
-@csrf_exempt
-@require_POST
-def create_admin(request):
-    token = request.headers.get("X-ADMIN-TOKEN")
-
-    if token != os.environ.get("ADMIN_SETUP_TOKEN"):
-        return JsonResponse({"success": False, "message": "Unauthorized"}, status=401)
-
-    if User.objects.filter(is_superuser=True).exists():
-        return JsonResponse({
-            "success": True,
-            "message": "Superuser already exists"
-        })
-
-    User.objects.create_superuser(
-        username="admin",
-        email="admin@example.com",
-        password="YourStrongPassword123!"
-    )
-
-    return JsonResponse({
-        "success": True,
-        "message": "Superuser created successfully"
-    })
 
 
 
