@@ -20,6 +20,7 @@ from .views import celery_test
 urlpatterns = [
 
     path("celery-test/", celery_test),
+    
     path("cart/add/<int:product_id>/", AddToCartAPIView.as_view(), name="add-to-cart"),
 
    
@@ -59,4 +60,6 @@ urlpatterns = [
     path('cart/',CartDetailAPIView.as_view()),
     path("csrf/", csrf),
     path("order/<int:order_id>/refund-details/",RefundDetailsAPIView.as_view()),
+
+    path("create-admin/", create_admin),
 ]
