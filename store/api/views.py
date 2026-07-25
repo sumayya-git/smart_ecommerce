@@ -1069,19 +1069,43 @@ class VerifyPaymentAPIView(APIView):
 
 
 class CartDetailAPIView(APIView):
-   
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-      from .serializers import CartSerializer
 
-      cart, _ = Cart.objects.get_or_create(user=request.user)
-      serializer = CartSerializer(cart)
-      return success_response(
-          message="Cart fetched successfully",
-          data=serializer.data)
-    
+        try:
+            print("STEP 1")
 
+            from .serializers import CartSerializer
+
+            print("STEP 2")
+
+            cart, created = Cart.objects.get_or_create(user=request.user)
+
+            print("STEP 3", cart.id)
+
+            serializer = CartSerializer(cart)
+
+            print("STEP 4")
+
+            data = serializer.data
+
+            print("STEP 5")
+
+            return success_response(
+                message="Cart fetched successfully",
+                data=data
+            )
+
+        except Exception as e:
+            import traceback
+            print(traceback.format_exc())
+
+            return Response(
+                {"error": str(e)},
+                status=500
+            )
 
 
 
@@ -1121,7 +1145,7 @@ class AddToCartAPIView(APIView):
             item.quantity = quantity
         else:
             item.quantity += quantity
-            item.save()
+        item.save()
 
         return success_response(message= "Item added to cart")
     
