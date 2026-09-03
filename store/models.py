@@ -14,6 +14,12 @@ class Category(models.Model):
     slug = models.SlugField(unique=True,blank=True)
     image = models.ImageField(upload_to='categories/', null= True, blank=True)
 
+    order = models.PositiveIntegerField(default=0)   
+
+    class Meta:
+        ordering = ['order', 'id']   
+
+
     
 
     def __str__(self):
