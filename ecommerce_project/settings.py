@@ -19,6 +19,12 @@ import dj_database_url
 
 load_dotenv()
 
+import cloudinary
+
+cloudinary.config(
+    secure=True
+)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -61,6 +67,7 @@ INSTALLED_APPS = [
 
     'store',
     'rest_framework',
+    'cloudinary',
     
     'corsheaders',
     'django_filters',
@@ -290,8 +297,11 @@ RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 
 BREVO_API_KEY = os.getenv("BREVO_API_KEY")
 
-MEDIA_URL ='/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
+
+
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+# MEDIA_URL ='/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 
 RAZORPAY_KEY_ID = os.getenv("RAZORPAY_KEY_ID")
 RAZORPAY_KEY_SECRET = os.getenv("RAZORPAY_KEY_SECRET")
