@@ -908,14 +908,243 @@ class CreatePaymentOrderAPIView(APIView):
                     
 
 
+# # @method_decorator(ratelimit(key='ip', rate='10/m',method='POST',block=True),name='post')
+# class VerifyPaymentAPIView(APIView):
+#     permission_classes = ([IsAuthenticated])
+
+#     def post(self,request):
+
+#         cart_items = CartItem.objects.filter(cart__user=request.user)
+
+        
+
+        
+#         buy_now = request.data.get("buy_now", False)
+#         product_id = request.data.get("product_id")
+#         quantity = request.data.get("quantity")
+                
+#         order_id = request.data.get("order_id")
+
+#         print("VERIFY PAYMENT HIT")
+#         print(request.data)
+
+#         razorpay_payment_id = request.data.get("razorpay_payment_id")
+#         razorpay_order_id = request.data.get("razorpay_order_id")
+#         razorpay_signature = request.data.get("razorpay_signature")
+       
+       
+
+#         if not all([order_id, razorpay_payment_id, razorpay_order_id, razorpay_signature]):
+#             return Response({"error": "Missing payment data"}, status=400)
+    
+        
+        
+
+#         try:
+
+#             client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID,settings.RAZORPAY_KEY_SECRET))
+#             params = {
+#                 "razorpay_order_id":
+#                 razorpay_order_id,
+#                 "razorpay_payment_id":
+#                 razorpay_payment_id,
+#                 "razorpay_signature":
+#                 razorpay_signature
+#             }
+             
+#             client.utility.verify_payment_signature(params)
+
+#             print("SIGNATURE VERIFIED")
+
+#             address = request.data.get("address")
+
+
+#             order = Order.objects.create(
+#                 user=request.user,
+#                 address=address,
+#                 payment_method="ONLINE",
+#                 payment_status="PAID",
+#                 status="PLACED",
+#                 total_amount=0
+#             )
+            
+#             # total = 0
+
+                                    
+
+            
+                                    
+           
+
+#             # for item in cart_items:
+#             #     product = item.product
+#             #     qty = item.quantity
+#             #     price = product.price * qty
+
+#             #     OrderItem.objects.create(
+#             #         order=order,
+#             #         product=product,
+#             #         quantity=qty,
+#             #         price=price
+#             #     )
+
+#             #     product.stock -= qty
+#             #     product.save()    
+
+#             #     cache.delete("products")
+           
+#             #     total += price
+
+#             # order.total_amount = total
+#             # order.save()
+
+#             total = 0
+
+# # 👇 NEW — Buy Now / Normal Cart
+#         if buy_now:
+
+#            product = get_object_or_404(Product, id=product_id)
+
+#            qty = int(quantity or 1)
+
+#            if product.stock < qty:
+#               return Response(
+#             {
+#                 "error": f"{product.name} has only {product.stock} items left"
+#             },
+#             status=400
+#         )
+
+#         price = product.price * qty
+
+#         OrderItem.objects.create(
+#             order=order,
+#             product=product,
+#             quantity=qty,
+#             price=price
+#         )
+
+#         product.stock -= qty
+#         product.save()
+
+#         total = price
+#  else:
+
+#     for item in cart_items:
+
+#         product = item.product
+#         qty = item.quantity
+#         price = product.price * qty
+
+#         OrderItem.objects.create(
+#             order=order,
+#             product=product,
+#             quantity=qty,
+#             price=price
+#         )
+
+#         product.stock -= qty
+#         product.save()
+
+#         cache.delete("products")
+
+#         total += price
+
+#     # 👇 NEW — Delete cart only for normal Cart checkout
+#         CartItem.objects.filter(
+#             cart__user=request.user
+#                  ).delete()
+
+
+#     order.total_amount = total
+#     order.save()
+
+                       
+
+#             send_invoice_email(order.id)
+
+#             log_info(f"Payment successful for Order {order.id}")
+
+#             CartItem.objects.filter(cart__user=request.user).delete()
+
+#             cache.delete("products")
+#             cache.delete("orders")
+
+#             return success_response(message="Payment successful")
+
+#             html = f"""
+#             <h2>🎉 Order Confirmed</h2>
+
+#             <p>Hello <b>{order.user.username}</b>,</p>
+
+#             <p>Thank you for shopping with <b>Smart Commerce</b>.</p>
+
+#             <p>Your Order ID is <b>#{order.id}</b>.</p>
+
+#             <p>✅ Your payment has been received successfully.</p>
+
+#             <p>Your order has been confirmed and is now being processed.</p>
+
+#             <p>Your invoice is attached with this email as a PDF.</p>
+
+#             <p>We will notify you when your order is shipped.</p>
+
+#             <br>
+
+#             <p>Thank you,<br>
+#             <b>Smart Commerce Team</b></p>
+#             """
+
+#             # html = f"""
+#             # <h2>🎉 Payment Successful</h2>
+
+#             # <p>Your payment for Order <b>#{order.id}</b> was successful.</p>
+
+#             # <p>Thank you for shopping with <b>Smart Commerce</b>.</p>
+#             # """
+
+#             # send_resend_email(
+#             #     to_email=order.user.email,
+#             #     subject=f"Payment Successful - Order #{order.id}",
+#             #     html_content=html,
+#             # )
+
+#             # log_info(f"Payment successful for Order {order.id}")
+
+
+      
+
+       
+
+#             CartItem.objects.filter(cart__user=request.user).delete()
+
+#             cache.delete("products")
+#             cache.delete("orders")
+
+#             return success_response(message="Payment successful")
+#         except Order.DoesNotExist:
+#             return Response({"error":"Order not found"}, status=404)
+        
+#         except razorpay.errors.SignatureVerificationError:
+#             return Response({"error":"Payment verification failed"}, status=400)
+        
+#         except Exception as e:
+#             return Response({"error": str(e)}, status=500)
+       
+
+
+        
+
 # @method_decorator(ratelimit(key='ip', rate='10/m',method='POST',block=True),name='post')
 class VerifyPaymentAPIView(APIView):
-    permission_classes = ([IsAuthenticated])
+    permission_classes = [IsAuthenticated]
 
-    def post(self,request):
+    def post(self, request):
 
-        cart_items = CartItem.objects.filter(cart__user=request.user)
-        
+        buy_now = request.data.get("buy_now", False)
+        product_id = request.data.get("product_id")
+        quantity = request.data.get("quantity")
+
         order_id = request.data.get("order_id")
 
         print("VERIFY PAYMENT HIT")
@@ -924,33 +1153,46 @@ class VerifyPaymentAPIView(APIView):
         razorpay_payment_id = request.data.get("razorpay_payment_id")
         razorpay_order_id = request.data.get("razorpay_order_id")
         razorpay_signature = request.data.get("razorpay_signature")
-       
-       
 
-        if not all([order_id, razorpay_payment_id, razorpay_order_id, razorpay_signature]):
-            return Response({"error": "Missing payment data"}, status=400)
-    
-        
-        
+        if not all([
+            order_id,
+            razorpay_payment_id,
+            razorpay_order_id,
+            razorpay_signature
+        ]):
+            return Response(
+                {"error": "Missing payment data"},
+                status=400
+            )
 
         try:
 
-            client = razorpay.Client(auth=(settings.RAZORPAY_KEY_ID,settings.RAZORPAY_KEY_SECRET))
+            # --------------------------------
+            # 1. Verify Razorpay Payment
+            # --------------------------------
+
+            client = razorpay.Client(
+                auth=(
+                    settings.RAZORPAY_KEY_ID,
+                    settings.RAZORPAY_KEY_SECRET
+                )
+            )
+
             params = {
-                "razorpay_order_id":
-                razorpay_order_id,
-                "razorpay_payment_id":
-                razorpay_payment_id,
-                "razorpay_signature":
-                razorpay_signature
+                "razorpay_order_id": razorpay_order_id,
+                "razorpay_payment_id": razorpay_payment_id,
+                "razorpay_signature": razorpay_signature
             }
-             
+
             client.utility.verify_payment_signature(params)
 
             print("SIGNATURE VERIFIED")
 
             address = request.data.get("address")
 
+            # --------------------------------
+            # 2. Create Order
+            # --------------------------------
 
             order = Order.objects.create(
                 user=request.user,
@@ -960,18 +1202,30 @@ class VerifyPaymentAPIView(APIView):
                 status="PLACED",
                 total_amount=0
             )
-            
+
             total = 0
 
-                                    
+            # --------------------------------
+            # 3. BUY NOW
+            # --------------------------------
 
-            
-                                    
-           
+            if buy_now:
 
-            for item in cart_items:
-                product = item.product
-                qty = item.quantity
+                product = get_object_or_404(
+                    Product,
+                    id=product_id
+                )
+
+                qty = int(quantity or 1)
+
+                if product.stock < qty:
+                    return Response(
+                        {
+                            "error": f"{product.name} has only {product.stock} items left"
+                        },
+                        status=400
+                    )
+
                 price = product.price * qty
 
                 OrderItem.objects.create(
@@ -982,91 +1236,166 @@ class VerifyPaymentAPIView(APIView):
                 )
 
                 product.stock -= qty
-                product.save()    
+                product.save()
 
-                cache.delete("products")
-           
-                total += price
+                total = price
+
+                print("BUY NOW ORDER CREATED")
+
+            # --------------------------------
+            # 4. NORMAL CART CHECKOUT
+            # --------------------------------
+
+            else:
+
+                cart_items = CartItem.objects.filter(
+                    cart__user=request.user
+                )
+
+                if not cart_items.exists():
+                    return Response(
+                        {"error": "Cart is empty"},
+                        status=400
+                    )
+
+                for item in cart_items:
+
+                    product = item.product
+                    qty = item.quantity
+                    price = product.price * qty
+
+                    if product.stock < qty:
+                        return Response(
+                            {
+                                "error": f"{product.name} has only {product.stock} items left"
+                            },
+                            status=400
+                        )
+
+                    OrderItem.objects.create(
+                        order=order,
+                        product=product,
+                        quantity=qty,
+                        price=price
+                    )
+
+                    product.stock -= qty
+                    product.save()
+
+                    total += price
+
+                # Clear cart ONLY for normal cart checkout
+                CartItem.objects.filter(
+                    cart__user=request.user
+                ).delete()
+
+                print("NORMAL CART ORDER CREATED")
+
+            # --------------------------------
+            # 5. Save Total
+            # --------------------------------
 
             order.total_amount = total
             order.save()
 
-                       
-
-            send_invoice_email(order.id)
-
-            log_info(f"Payment successful for Order {order.id}")
-
-            CartItem.objects.filter(cart__user=request.user).delete()
-
             cache.delete("products")
             cache.delete("orders")
 
-            return success_response(message="Payment successful")
+            # --------------------------------
+            # 6. Send Invoice Email
+            # --------------------------------
+
+            send_invoice_email(order.id)
+
+            # --------------------------------
+            # 7. Log Success
+            # --------------------------------
+
+            log_info(
+                f"Payment successful for Order {order.id}"
+            )
+
+            # --------------------------------
+            # 8. Order Confirmation Email
+            # --------------------------------
 
             html = f"""
             <h2>🎉 Order Confirmed</h2>
 
             <p>Hello <b>{order.user.username}</b>,</p>
 
-            <p>Thank you for shopping with <b>Smart Commerce</b>.</p>
+            <p>
+                Thank you for shopping with
+                <b>Smart Commerce</b>.
+            </p>
 
-            <p>Your Order ID is <b>#{order.id}</b>.</p>
+            <p>
+                Your Order ID is
+                <b>#{order.id}</b>.
+            </p>
 
-            <p>✅ Your payment has been received successfully.</p>
+            <p>
+                ✅ Your payment has been received successfully.
+            </p>
 
-            <p>Your order has been confirmed and is now being processed.</p>
+            <p>
+                Your order has been confirmed
+                and is now being processed.
+            </p>
 
-            <p>Your invoice is attached with this email as a PDF.</p>
+            <p>
+                Your invoice is attached with this email as a PDF.
+            </p>
 
-            <p>We will notify you when your order is shipped.</p>
+            <p>
+                We will notify you when your order is shipped.
+            </p>
 
             <br>
 
-            <p>Thank you,<br>
-            <b>Smart Commerce Team</b></p>
+            <p>
+                Thank you,<br>
+                <b>Smart Commerce Team</b>
+            </p>
             """
 
-            # html = f"""
-            # <h2>🎉 Payment Successful</h2>
-
-            # <p>Your payment for Order <b>#{order.id}</b> was successful.</p>
-
-            # <p>Thank you for shopping with <b>Smart Commerce</b>.</p>
-            # """
+            # If you want a separate confirmation email,
+            # use send_resend_email here.
 
             # send_resend_email(
             #     to_email=order.user.email,
-            #     subject=f"Payment Successful - Order #{order.id}",
+            #     subject=f"Order #{order.id} Confirmed",
             #     html_content=html,
             # )
 
-            # log_info(f"Payment successful for Order {order.id}")
+            # --------------------------------
+            # 9. Final Response
+            # --------------------------------
 
+            return success_response(
+                message="Payment successful"
+            )
 
-      
-
-       
-
-            CartItem.objects.filter(cart__user=request.user).delete()
-
-            cache.delete("products")
-            cache.delete("orders")
-
-            return success_response(message="Payment successful")
         except Order.DoesNotExist:
-            return Response({"error":"Order not found"}, status=404)
-        
+
+            return Response(
+                {"error": "Order not found"},
+                status=404
+            )
+
         except razorpay.errors.SignatureVerificationError:
-            return Response({"error":"Payment verification failed"}, status=400)
-        
+
+            return Response(
+                {"error": "Payment verification failed"},
+                status=400
+            )
+
         except Exception as e:
-            return Response({"error": str(e)}, status=500)
-       
 
-
-        
-
+            return Response(
+                {"error": str(e)},
+                status=500
+            )
 
 class CartDetailAPIView(APIView):
 

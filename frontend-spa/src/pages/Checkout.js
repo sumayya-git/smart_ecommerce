@@ -170,7 +170,13 @@ function Checkout(){
 
                                                 razorpay_signature: response.razorpay_signature,
 
-                                                address: address
+                                                address: address,
+
+                                                buy_now: isBuyNow,
+
+                                                product_id: isBuyNow ? buyNowData.product.id : null,
+
+                                                quantity: isBuyNow ? buyNowData.quantity : null
 
                                             });
                                         window.dispatchEvent(new Event("cartUpdated"));
