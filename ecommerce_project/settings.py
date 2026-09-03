@@ -67,6 +67,7 @@ INSTALLED_APPS = [
 
     'store',
     'rest_framework',
+    'cloudinary_storage',
     'cloudinary',
     
     'corsheaders',
@@ -298,8 +299,17 @@ RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 BREVO_API_KEY = os.getenv("BREVO_API_KEY")
 
 
+STORAGES = {
+    "default": {
+        "BACKEND": "cloudinary_storage.storage.MediaCloudinaryStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
+    },
+}
 
-DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
+
+# DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 # MEDIA_URL ='/media/'
 # MEDIA_ROOT = os.path.join(BASE_DIR / 'media')
 
