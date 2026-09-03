@@ -1695,7 +1695,7 @@ class CancelOrderAPIView(APIView):
 #         )
 
 
-    class UpdateOrderStatusAPIView(APIView):
+class UpdateOrderStatusAPIView(APIView):
         permission_classes = [IsAdminUser]
 
         def post(self, request, order_id):
