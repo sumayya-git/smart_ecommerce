@@ -1626,23 +1626,40 @@ class UpdateOrderStatusAPIView(APIView):
         <p>Thank you for shopping with Smart Commerce.</p>
         """
 
-       send_resend_email(
-            to_email=order.user.email,
-            subject=f"Order #{order.id} Status Updated",
-            html_content=html,
-        )
+    #    send_resend_email(
+    #         to_email=order.user.email,
+    #         subject=f"Order #{order.id} Status Updated",
+    #         html_content=html,
+    #     )
 
-       cache.delete("orders")
+    #    cache.delete("orders")
 
       
 
-       if new_status == "DELIVERED":
-           send_invoice_email(order.id)
+    #    if new_status == "DELIVERED":
+    #        send_invoice_email(order.id)
             # send_invoice_email_task.delay(order.id)
 
 
+
+       if new_status != "DELIVERED":
+
+           send_resend_email(
+                to_email=order.user.email,
+                subject=f"Order #{order.id} Status Updated",
+                html_content=html,
+            )
+
+       cache.delete("orders")
+
+       
+       if new_status == "DELIVERED":
+           send_invoice_email(order.id)
+
        
         
+
+
            
        return success_response(
           message=f"Order updated to {new_status}"
