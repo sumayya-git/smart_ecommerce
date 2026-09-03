@@ -1590,82 +1590,182 @@ class CancelOrderAPIView(APIView):
         
 
 
-class UpdateOrderStatusAPIView(APIView):
-    permission_classes = [IsAdminUser]
+# class UpdateOrderStatusAPIView(APIView):
+#     permission_classes = [IsAdminUser]
 
     
 
-    def post(self, request, order_id):
+#     def post(self, request, order_id):
        
-       print("UPDATEORDERSTATUS API HIT")
+#        print("UPDATEORDERSTATUS API HIT")
 
-       order = get_object_or_404(Order, id=order_id)
+#        order = get_object_or_404(Order, id=order_id)
 
 
-       new_status = request.data.get("status")
+#        new_status = request.data.get("status")
 
-       allowed_status = ["PROCESSING", "SHIPPED", "DELIVERED"]
+#        allowed_status = ["PROCESSING", "SHIPPED", "DELIVERED"]
 
-       if new_status not in allowed_status:
-          return Response({"error": "Invalid status"}, status=400)
-       order.status = new_status
+#        if new_status not in allowed_status:
+#           return Response({"error": "Invalid status"}, status=400)
+#        order.status = new_status
 
-       order.save()
+#        order.save()
 
-       print("STATUS EMAIL TRIGGERED:", new_status)
+#        print("STATUS EMAIL TRIGGERED:", new_status)
 
-       html = f"""
-        <h2>Order Status Updated</h2>
+#     #    html = f"""
+#     #     <h2>Order Status Updated</h2>
 
-        <p>Hello <b>{order.user.username}</b>,</p>
+#     #     <p>Hello <b>{order.user.username}</b>,</p>
 
-        <p>Your Order <b>#{order.id}</b> status has been updated.</p>
+#     #     <p>Your Order <b>#{order.id}</b> status has been updated.</p>
 
-        <h3>Status: {new_status}</h3>
+#     #     <h3>Status: {new_status}</h3>
 
-        <p>Thank you for shopping with Smart Commerce.</p>
-        """
+#     #     <p>Thank you for shopping with Smart Commerce.</p>
+#     #     """
 
-    #    send_resend_email(
-    #         to_email=order.user.email,
-    #         subject=f"Order #{order.id} Status Updated",
-    #         html_content=html,
-    #     )
+#     #    send_resend_email(
+#     #         to_email=order.user.email,
+#     #         subject=f"Order #{order.id} Status Updated",
+#     #         html_content=html,
+#     #     )
 
-    #    cache.delete("orders")
+#     #    cache.delete("orders")
 
       
 
-    #    if new_status == "DELIVERED":
-    #        send_invoice_email(order.id)
-            # send_invoice_email_task.delay(order.id)
+#     #    if new_status == "DELIVERED":
+#     #        send_invoice_email(order.id)
+#             # send_invoice_email_task.delay(order.id)
 
 
 
-       if new_status != "DELIVERED":
+#     #    if new_status != "DELIVERED":
 
-           send_resend_email(
-                to_email=order.user.email,
-                subject=f"Order #{order.id} Status Updated",
-                html_content=html,
-            )
+#     #        send_resend_email(
+#     #             to_email=order.user.email,
+#     #             subject=f"Order #{order.id} Status Updated",
+#     #             html_content=html,
+#     #         )
 
-       cache.delete("orders")
+#     #    cache.delete("orders")
+
+#         if new_status == "DELIVERED":
+#            # 👇 DELIVERED → only one email with PDF invoice
+#            send_invoice_email(order.id)
+
+#        else:
+#            html = f"""
+#             <h2>Order Status Updated</h2>
+
+#             <p>Hello <b>{order.user.username}</b>,</p>
+
+#             <p>Your Order <b>#{order.id}</b> status has been updated.</p>
+
+#             <h3>Status: {new_status}</h3>
+
+#             <p>Thank you for shopping with Smart Commerce.</p>
+#             """
+
+#            send_resend_email(
+#                 to_email=order.user.email,
+#                 subject=f"Order #{order.id} Status Updated",
+#                 html_content=html,
+#             )
+
+#        cache.delete("orders")
+
+
+
 
        
-       if new_status == "DELIVERED":
-           send_invoice_email(order.id)
+#        if new_status == "DELIVERED":
+#            send_invoice_email(order.id)
 
        
         
 
 
            
-       return success_response(
-          message=f"Order updated to {new_status}"
+#        return success_response(
+#           message=f"Order updated to {new_status}"
                 
+#         )
+
+
+    class UpdateOrderStatusAPIView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def post(self, request, order_id):
+
+        print("UPDATEORDERSTATUS API HIT")
+
+        order = get_object_or_404(Order, id=order_id)
+
+        new_status = request.data.get("status")
+
+        allowed_status = [
+            "PROCESSING",
+            "PACKED",
+            "SHIPPED",
+            "DELIVERED"
+        ]
+
+        if new_status not in allowed_status:
+            return Response(
+                {"error": "Invalid status"},
+                status=400
+            )
+
+        order.status = new_status
+        order.save()
+
+        print("STATUS EMAIL TRIGGERED:", new_status)
+
+        # --------------------------------
+        # DELIVERED → ONLY ONE EMAIL
+        # WITH PDF INVOICE
+        # --------------------------------
+        if new_status == "DELIVERED":
+
+            send_invoice_email(order.id)
+
+        # --------------------------------
+        # OTHER STATUSES → NORMAL EMAIL
+        # --------------------------------
+        else:
+
+            html = f"""
+            <h2>Order Status Updated</h2>
+
+            <p>Hello <b>{order.user.username}</b>,</p>
+
+            <p>
+                Your Order <b>#{order.id}</b>
+                status has been updated.
+            </p>
+
+            <h3>Status: {new_status}</h3>
+
+            <p>
+                Thank you for shopping with Smart Commerce.
+            </p>
+            """
+
+            send_resend_email(
+                to_email=order.user.email,
+                subject=f"Order #{order.id} - {new_status}",
+                html_content=html,
+            )
+
+        # Clear order cache
+        cache.delete("orders")
+
+        return success_response(
+            message=f"Order updated to {new_status}"
         )
-    
 
 class AdminOrdersAPIView(APIView):
     permission_classes = [IsAdminUser]
