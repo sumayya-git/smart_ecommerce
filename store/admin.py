@@ -23,8 +23,12 @@ class OrderAdminForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Payment PAID இல்லையென்றால் DELIVERED option காட்ட வேண்டாம்
-        if self.instance and self.instance.payment_status != "PAID":
+        payment_status = self.instance.payment_status
+
+        if self.data:
+            payment_status = self.data.get("payment_status", payment_status)
+
+        if payment_status != "PAID":
             self.fields["status"].choices = [
                 choice
                 for choice in self.fields["status"].choices
