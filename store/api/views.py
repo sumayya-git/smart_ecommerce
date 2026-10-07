@@ -50,7 +50,7 @@ import base64
 from django.db.models import Q
 from store.models import UserProfile
 from django.db import transaction
-from store.utils import send_invoice_email
+from store.utils import send_invoice_email, send_order_confirmation_invoice_email
 
 
 from rest_framework.decorators import api_view
@@ -1301,11 +1301,11 @@ class VerifyPaymentAPIView(APIView):
             cache.delete("products")
             cache.delete("orders")
 
-            # --------------------------------
-            # 6. Send Invoice Email
-            # --------------------------------
+           # --------------------------------
+           # 6. Send Order Confirmation + Invoice Email
+           # --------------------------------
 
-            send_invoice_email(order.id)
+            send_order_confirmation_invoice_email(order.id)
 
             # --------------------------------
             # 7. Log Success
@@ -1730,7 +1730,38 @@ class UpdateOrderStatusAPIView(APIView):
             # --------------------------------
             if new_status == "DELIVERED":
 
-                send_invoice_email(order.id)
+               if order.payment_method == "COD":
+                  send_invoice_email(order.id)
+
+               else:
+                html = f"""
+                <h2>📦 Order Delivered</h2>
+
+                <p>Hello <b>{order.user.username}</b>,</p>
+
+                <p>
+                    Your Order <b>#{order.id}</b>
+                    has been successfully delivered.
+                </p>
+
+                <p>
+                    Thank you for shopping with
+                    <b>Smart Commerce</b>.
+                </p>
+
+                <br>
+
+                <p>
+                    Thank you,<br>
+                    <b>Smart Commerce Team</b>
+                </p>
+                """
+
+                send_resend_email(
+                    to_email=order.user.email,
+                    subject=f"Order #{order.id} Delivered",
+                    html_content=html,
+                )
 
             # --------------------------------
             # OTHER STATUSES → NORMAL EMAIL
@@ -1738,23 +1769,23 @@ class UpdateOrderStatusAPIView(APIView):
             else:
 
                 html = f"""
-                <h2>Order Status Updated</h2>
+                    <h2>Order Status Updated</h2>
 
-                <p>Hello <b>{order.user.username}</b>,</p>
+                    <p>Hello <b>{order.user.username}</b>,</p>
 
-                <p>
-                    Your Order <b>#{order.id}</b>
-                    status has been updated.
-                </p>
+                    <p>
+                        Your Order <b>#{order.id}</b>
+                        status has been updated.
+                    </p>
 
-                <h3>Status: {new_status}</h3>
+                    <h3>Status: {new_status}</h3>
 
-                <p>
-                    Thank you for shopping with Smart Commerce.
-                </p>
-                """
+                    <p>
+                        Thank you for shopping with Smart Commerce.
+                    </p>
+                    """
 
-                send_resend_email(
+            send_resend_email(
                     to_email=order.user.email,
                     subject=f"Order #{order.id} - {new_status}",
                     html_content=html,
