@@ -90,6 +90,10 @@ from django.views.decorators.cache import cache_page
 
 import time
 
+from django.template.loader import get_template
+from django.contrib.staticfiles import finders
+from xhtml2pdf import pisa
+
 
 
 
@@ -334,23 +338,28 @@ class ProductListAPIView(generics.ListAPIView):
 
         return products
 class OrderInvoiceAPI(APIView):
-  
+
     permission_classes = [IsAuthenticated]
 
     def get(self, request, pk):
-        order = get_object_or_404(Order, pk=pk, user=request.user)
 
-        invoice_number = f"INV-{order.id:05d}"
+        order = get_object_or_404(
+            Order,
+            pk=pk,
+            user=request.user
+        )
 
-        print("DEBUG PAYMENT STATUS",order.payment_status)
+        print("DEBUG PAYMENT STATUS", order.payment_status)
 
-                # ONLINE → Paid required
+        # ONLINE → Paid required
         if order.payment_method == "ONLINE":
 
             if order.payment_status != "PAID":
                 return Response(
-                    {"error": "Invoice available only after successful payment."},
-                    status=400,
+                    {
+                        "error": "Invoice available only after successful payment."
+                    },
+                    status=400
                 )
 
         # COD → Delivered required
@@ -358,147 +367,62 @@ class OrderInvoiceAPI(APIView):
 
             if order.status != "DELIVERED":
                 return Response(
-                    {"error": "Invoice available only after delivery."},
-                    status=400,
+                    {
+                        "error": "Invoice available only after delivery."
+                    },
+                    status=400
                 )
 
+        # -------------------------------------------------
+        # USE SAME INVOICE TEMPLATE AS EMAIL
+        # -------------------------------------------------
+
+        order = Order.objects.prefetch_related(
+            "items__product"
+        ).get(pk=order.id)
+
+        template = get_template("store/invoice.html")
+
+        items = order.items.all()
+
+        # Same calculation used by email invoice
+        subtotal = 0
+
+        for item in items:
+            subtotal += float(item.price) * item.quantity
+
+        cgst = subtotal * 0.09
+        sgst = subtotal * 0.09
+        grand_total = subtotal + cgst + sgst
+
+        logo_path = finders.find("logo.png")
+
+        html = template.render({
+            "order": order,
+            "items": items,
+            "subtotal": subtotal,
+            "cgst": cgst,
+            "sgst": sgst,
+            "grand_total": grand_total,
+            "logo_path": logo_path,
+        })
+
+        # Generate PDF
         buffer = io.BytesIO()
-        doc = SimpleDocTemplate(buffer, pagesize=A4)
-        elements = []
 
-        logo_path = os.path.join(settings.BASE_DIR,"store/templates/store/static/logo.png")
-
-        if os.path.exists(logo_path):
-            logo = Image(logo_path, width=100, height=50)
-            logo.hAlign = "CENTER"
-            
-        elements.append(Spacer(1,20))
-
-        styles = getSampleStyleSheet()
-
-        from reportlab.lib.enums import TA_CENTER
-
-        center_style = ParagraphStyle(name="Center", alignment=TA_CENTER, fontSize=22)
-
-        elements.append(Paragraph("INVOICE",center_style))
-        elements.append(Spacer(1,20))
-
-        
-        title_style = ParagraphStyle(
-            'CustomTitle',
-            parent=styles['Title'],
-            fontSize=18,
-            textColor=colors.darkblue,
-            alignment=1
+        pisa.CreatePDF(
+            html,
+            dest=buffer
         )
 
-        company_info = Paragraph(
-            "<b>Smart Commerce Pvt Ltd</b><br/>"
-            "123 Anna Salai<br/>"
-            "Chennai-600002 <br/>"
-            "Phone:900000000<br/>"
-            "Email:support@smartcommerce.com",
-            styles["Normal"]
-        )
-
-        logo = None
-        if os.path.exists(logo_path):
-            logo = Image(logo_path, width=1.2*inch, height=0.6*inch)
-            header_data = [[company_info, logo]]
-            header_table = Table(header_data,colWidths=[4*inch, 2*inch])
-            header_table.setStyle(TableStyle([('VALIGN',(0,0),(-1,-1),'TOP')]))
-            elements.append(header_table)
-            elements.append(Spacer(1,20))
-        elements.append(Paragraph(f"<b>Invoice No:</b> {invoice_number}", styles["Normal"]))
-        elements.append(Paragraph(f"<b>GST No:</b>33ABCDE1234F1Z5",styles["Normal"]))
-        elements.append(Spacer(1,10))
-        elements.append(Paragraph("<b>Bill To:</b>", styles["Heading3"]))
-        elements.append(Paragraph(f"{order.user.username}", styles["Normal"]))
-        elements.append(Paragraph(f"{order.address}", styles["Normal"]))
-        elements.append(Paragraph(f"{order.city}", styles["Normal"]))
-        elements.append(Spacer(1,15))
-        elements.append(Paragraph(f"OrderDate:{order.created_at.strftime('%d-%m-%Y %H:%M')}", styles["Normal"]))
-        elements.append(Paragraph(f"Payment Status:{order.payment_status}", styles["Normal"]))
-        elements.append(Spacer(1,20))
-        elements.append(HRFlowable(width="100%", thickness=1, color=colors.grey))
-        elements.append(Spacer(1,15))
-        subtotal = order.total_amount
-        gst = subtotal * Decimal("0.18")
-        grand_total = subtotal + gst
-        data = [["Product", "Qty", "Unit Price","Total"]]
-
-
-        for item in order.items.all():
-            total_price = item.quantity * item.product.price
-            data.append([
-                item.product.name,
-                item.quantity,
-                f"${item.product.price:,.2f}",
-                f"${total_price:,.2f}"
-          ])
-            
-        subtotal = order.total_amount
-        gst = float(subtotal) * 0.18
-        grand_total = float(subtotal) + gst
-
-        data.append(["","", "Subtotal", f"$ {subtotal:,.2f}"])
-        data.append(["","", "GST (18%)", f"${gst:,.2f}"])
-        data.append(["","", "Grand Total", f"${grand_total:,.2f}"])
-
-        table = Table(data, colWidths=[3*inch, 1*inch,1.5*inch, 1.5*inch])
-        table.setStyle(TableStyle([
-            ('BACKGROUND', (0,0), (-1, 0), colors.HexColor("#232f3e")),
-            ('TEXTCOLOR', (0,0), (-1, 0), colors.whitesmoke),
-            ('ALIGN', (1,1), (-1, -1), 'CENTER'),
-            ('FONTNAME',(0,0),(-1,0),'Helvetica-Bold'),
-            ('FONTSIZE',(0,0),(-1,-1),10),
-            ('GRID', (0,0), (-1,-1),  0.25, colors.grey),
-            ('BACKGROUND', (0,1), (-1, -1), colors.beige),
-        ]))
-
-        elements.append(table)
-
-        watermark = ParagraphStyle(
-            "watermark",
-            fontSize=40,
-            textColor=lightgrey,
-            alignment=1
-        )
-
-        elements.append(Paragraph("SMART COMMERCE", watermark))
-        elements.append(Spacer(1,20))
-        
-
-        elements.append(Spacer(1,20))
-        elements.append(Paragraph("Thank you for shopping with us!", styles["Heading3"]))
-        elements.append(Paragraph("This is a computer generated invoice.", styles["Normal"]))
-
-        data = f"{order.id} {order.user.username} {order.total_amount}"
-
-        invoice_hash = hashlib.sha256(data.encode()).hexdigest()
-         
-
-        qr_data = f"http://192.168.29.148:8000/api/verify-invoice/{order.id}/?hash={invoice_hash}"
-
-        
-
-        qr = qrcode.make(qr_data)
-
-        qr_path = f"qr_{order.id}.png"
-        qr.save(qr_path)
-
-        qr_img = Image(qr_path, width=80, height=80)
-
-        elements.append(Spacer(1,20))
-        elements.append(Paragraph("Scan to verify invoice", styles["Normal"]))
-        elements.append(Spacer(1,10))
-        elements.append(qr_img)
-        
-                              
-        doc.build(elements)
         buffer.seek(0)
 
-        return FileResponse(buffer,as_attachment=True, filename=f"INV-{order.id:05d}.pdf", content_type="application/pdf")
+        return FileResponse(
+            buffer,
+            as_attachment=True,
+            filename=f"invoice_{order.id}.pdf",
+            content_type="application/pdf"
+        )
     
 
 def verify_invoice(request, order_id):
